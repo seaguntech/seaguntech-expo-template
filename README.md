@@ -139,3 +139,8 @@ supabase functions serve
 
 - Expo Router docs: https://docs.expo.dev/router/introduction
 - NativeWind docs: https://www.nativewind.dev/
+- iOS capture:
+
+https://github.com/user-attachments/assets/7a4a0d39-82ab-4ab2-8a5e-37f249da482b
+
+r
