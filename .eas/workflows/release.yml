@@ -1,0 +1,14 @@
+name: Production Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    type: build
+    params:
+      platform: all
+      profile: production
