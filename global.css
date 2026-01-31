@@ -1,0 +1,121 @@
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css';
+@import 'nativewind/theme';
+
+/* Platform-specific font families */
+@media android {
+  :root {
+    --font-mono: monospace;
+    --font-rounded: normal;
+    --font-serif: serif;
+    --font-sans: normal;
+  }
+}
+
+@media ios {
+  :root {
+    --font-mono: ui-monospace;
+    --font-serif: ui-serif;
+    --font-sans: system-ui;
+    --font-rounded: ui-rounded;
+  }
+}
+
+/* Color scheme */
+@layer base {
+  html {
+    color-scheme: light dark;
+  }
+}
+
+/* Custom theme variables */
+:root {
+  /* Primary colors */
+  --color-primary: light-dark(rgb(37 99 235), rgb(59 130 246));
+  --color-primary-foreground: rgb(255 255 255);
+
+  /* Secondary colors */
+  --color-secondary: light-dark(rgb(100 116 139), rgb(71 85 105));
+  --color-secondary-foreground: rgb(255 255 255);
+
+  /* Background colors */
+  --color-background: light-dark(rgb(255 255 255), rgb(15 23 42));
+  --color-foreground: light-dark(rgb(15 23 42), rgb(248 250 252));
+
+  /* Card colors */
+  --color-card: light-dark(rgb(255 255 255), rgb(30 41 59));
+  --color-card-foreground: light-dark(rgb(15 23 42), rgb(248 250 252));
+
+  /* Border and input */
+  --color-border: light-dark(rgb(226 232 240), rgb(51 65 85));
+  --color-input: light-dark(rgb(226 232 240), rgb(51 65 85));
+  --color-ring: light-dark(rgb(37 99 235), rgb(59 130 246));
+
+  /* Muted colors */
+  --color-muted: light-dark(rgb(241 245 249), rgb(30 41 59));
+  --color-muted-foreground: light-dark(rgb(100 116 139), rgb(148 163 184));
+
+  /* Accent colors */
+  --color-accent: light-dark(rgb(241 245 249), rgb(30 41 59));
+  --color-accent-foreground: light-dark(rgb(15 23 42), rgb(248 250 252));
+
+  /* Status colors */
+  --color-destructive: light-dark(rgb(239 68 68), rgb(220 38 38));
+  --color-destructive-foreground: rgb(255 255 255);
+  --color-success: light-dark(rgb(34 197 94), rgb(22 163 74));
+  --color-success-foreground: rgb(255 255 255);
+  --color-warning: light-dark(rgb(245 158 11), rgb(217 119 6));
+  --color-warning-foreground: rgb(255 255 255);
+}
+
+/* iOS native colors via platformColor */
+@media ios {
+  :root {
+    --color-primary: platformColor(systemBlue);
+    --color-destructive: platformColor(systemRed);
+    --color-success: platformColor(systemGreen);
+    --color-warning: platformColor(systemOrange);
+    --color-background: platformColor(systemBackground);
+    --color-foreground: platformColor(label);
+    --color-card: platformColor(secondarySystemBackground);
+    --color-card-foreground: platformColor(label);
+    --color-muted: platformColor(tertiarySystemBackground);
+    --color-muted-foreground: platformColor(secondaryLabel);
+    --color-border: platformColor(separator);
+  }
+}
+
+/* Register as Tailwind theme colors */
+@layer theme {
+  @theme {
+    --color-primary: var(--color-primary);
+    --color-primary-foreground: var(--color-primary-foreground);
+    --color-secondary: var(--color-secondary);
+    --color-secondary-foreground: var(--color-secondary-foreground);
+    --color-background: var(--color-background);
+    --color-foreground: var(--color-foreground);
+    --color-card: var(--color-card);
+    --color-card-foreground: var(--color-card-foreground);
+    --color-border: var(--color-border);
+    --color-input: var(--color-input);
+    --color-ring: var(--color-ring);
+    --color-muted: var(--color-muted);
+    --color-muted-foreground: var(--color-muted-foreground);
+    --color-accent: var(--color-accent);
+    --color-accent-foreground: var(--color-accent-foreground);
+    --color-destructive: var(--color-destructive);
+    --color-destructive-foreground: var(--color-destructive-foreground);
+    --color-success: var(--color-success);
+    --color-success-foreground: var(--color-success-foreground);
+    --color-warning: var(--color-warning);
+    --color-warning-foreground: var(--color-warning-foreground);
+
+    /* Border radius */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-full: 9999px;
+  }
+}

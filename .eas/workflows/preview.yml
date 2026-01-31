@@ -1,0 +1,12 @@
+name: Preview Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  build:
+    type: build
+    params:
+      platform: all
+      profile: preview
