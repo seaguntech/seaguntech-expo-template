@@ -10,7 +10,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { useColorScheme as useDeviceColorScheme } from 'react-native'
+import { Appearance, useColorScheme as useDeviceColorScheme } from 'react-native'
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
@@ -73,6 +73,15 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
       // Theme will update automatically via isDark memo
     }
   }, [deviceColorScheme, themeMode])
+
+  // Sync with React Native Appearance to update CSS variables
+  useEffect(() => {
+    // Update React Native's Appearance to trigger NativeWind CSS updates
+    if (process.env.EXPO_OS !== 'web') {
+      // Force the appearance to match our theme
+      Appearance.setColorScheme(isDark ? 'dark' : 'light')
+    }
+  }, [isDark])
 
   const value = useMemo<ThemeContextValue>(
     () => ({

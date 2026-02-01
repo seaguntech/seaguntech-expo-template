@@ -41,13 +41,16 @@
     "invalidCredentials": "Invalid email or password",
     "emailRequired": "Email is required",
     "passwordRequired": "Password is required",
+    "invalidEmail": "Please enter a valid email address",
     "passwordTooShort": "Password must be at least 8 characters",
-    "passwordsDoNotMatch": "Passwords do not match"
+    "passwordsDoNotMatch": "Passwords do not match",
+    "signInFailed": "Authentication failed. Please try again."
   },
   "profile": {
     "title": "Profile",
     "editProfile": "Edit Profile",
     "displayName": "Display Name",
+    "displayNameRequired": "Display name must be at least 2 characters",
     "firstName": "First Name",
     "lastName": "Last Name",
     "phone": "Phone",
