@@ -10,7 +10,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { useColorScheme as useDeviceColorScheme } from 'react-native'
+import { Appearance, useColorScheme as useDeviceColorScheme } from 'react-native'
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
@@ -78,7 +78,6 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   useEffect(() => {
     // Update React Native's Appearance to trigger NativeWind CSS updates
     if (process.env.EXPO_OS !== 'web') {
-      const { Appearance } = require('react-native')
       // Force the appearance to match our theme
       Appearance.setColorScheme(isDark ? 'dark' : 'light')
     }
