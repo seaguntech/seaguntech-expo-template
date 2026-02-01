@@ -74,6 +74,16 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     }
   }, [deviceColorScheme, themeMode])
 
+  // Sync with React Native Appearance to update CSS variables
+  useEffect(() => {
+    // Update React Native's Appearance to trigger NativeWind CSS updates
+    if (process.env.EXPO_OS !== 'web') {
+      const { Appearance } = require('react-native')
+      // Force the appearance to match our theme
+      Appearance.setColorScheme(isDark ? 'dark' : 'light')
+    }
+  }, [isDark])
+
   const value = useMemo<ThemeContextValue>(
     () => ({
       theme,

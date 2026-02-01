@@ -41,13 +41,16 @@
     "invalidCredentials": "Email ou mot de passe invalide",
     "emailRequired": "L'email est requis",
     "passwordRequired": "Le mot de passe est requis",
+    "invalidEmail": "Veuillez saisir une adresse email valide",
     "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
-    "passwordsDoNotMatch": "Les mots de passe ne correspondent pas"
+    "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+    "signInFailed": "Échec de l'authentification. Veuillez réessayer."
   },
   "profile": {
     "title": "Profil",
     "editProfile": "Modifier le Profil",
     "displayName": "Nom d'affichage",
+    "displayNameRequired": "Le nom doit comporter au moins 2 caractères",
     "firstName": "Prénom",
     "lastName": "Nom",
     "phone": "Téléphone",

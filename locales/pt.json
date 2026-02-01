@@ -41,13 +41,16 @@
     "invalidCredentials": "Email ou senha inválidos",
     "emailRequired": "O email é obrigatório",
     "passwordRequired": "A senha é obrigatória",
+    "invalidEmail": "Por favor, insira um endereço de email válido",
     "passwordTooShort": "A senha deve ter pelo menos 8 caracteres",
-    "passwordsDoNotMatch": "As senhas não coincidem"
+    "passwordsDoNotMatch": "As senhas não coincidem",
+    "signInFailed": "Falha na autenticação. Por favor, tente novamente."
   },
   "profile": {
     "title": "Perfil",
     "editProfile": "Editar Perfil",
     "displayName": "Nome de exibição",
+    "displayNameRequired": "O nome deve ter pelo menos 2 caracteres",
     "firstName": "Nome",
     "lastName": "Sobrenome",
     "phone": "Telefone",
