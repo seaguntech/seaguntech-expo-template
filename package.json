@@ -18,7 +18,12 @@
     "format:check": "prettier --check \"app/**/*.{js,jsx,ts,tsx}\" \"src/**/*.{js,jsx,ts,tsx}\" \"config/**/*.{js,jsx,ts,tsx}\" \"constants/**/*.{js,jsx,ts,tsx}\" \"types/**/*.{js,jsx,ts,tsx}\" \"__tests__/**/*.{js,jsx,ts,tsx}\"",
     "check-types": "tsc --noEmit",
     "prepare": "husky install",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "supabase:migrate": "supabase db push",
+    "supabase:migrate:local": "supabase migration up --local",
+    "supabase:reset": "supabase db reset",
+    "supabase:seed": "tsx supabase/scripts/seed.ts",
+    "supabase:setup": "npm run supabase:migrate && npm run supabase:seed"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -91,6 +96,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^25.1.0",
     "@types/react": "~19.1.0",
+    "dotenv": "^17.2.3",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
     "eslint-config-prettier": "^10.1.8",
@@ -101,6 +107,7 @@
     "patch-package": "^8.0.1",
     "prettier": "^3.8.1",
     "tailwindcss": "^4.1.18",
+    "tsx": "^4.21.0",
     "typescript": "~5.9.2"
   },
   "private": true

@@ -1,0 +1,22 @@
+name: 'Prepare'
+description: 'Setup Node.js and install dependencies'
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10.25.0
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: package.json
+        cache: pnpm
+        cache-dependency-path: |
+          pnpm-lock.yaml
+          package.json
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile

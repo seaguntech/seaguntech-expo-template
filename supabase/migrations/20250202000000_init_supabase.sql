@@ -1,9 +1,9 @@
 -- Initial Supabase Schema for Seaguntech Expo Template
 -- Run with: supabase db push
 
--- Enable necessary extensions
-create extension if not exists "uuid-ossp";
-create extension if not exists "pgcrypto";
+-- Enable necessary extensions in public schema
+-- Note: gen_random_uuid() is built-in to Postgres 13+, no uuid-ossp needed
+create extension if not exists "pgcrypto" with schema public cascade;
 
 -- ============================================
 -- PROFILES TABLE
@@ -59,7 +59,7 @@ create or replace trigger on_auth_user_created
 -- TASKS TABLE
 -- ============================================
 create table if not exists public.tasks (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   user_id uuid references auth.users on delete cascade not null,
   title text not null,
   description text,
@@ -102,7 +102,7 @@ create index if not exists tasks_due_date_idx on public.tasks(due_date);
 -- PUSH TOKENS TABLE
 -- ============================================
 create table if not exists public.push_tokens (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   user_id uuid references auth.users on delete cascade unique not null,
   token text not null,
   platform text check (platform in ('ios', 'android', 'web')),
@@ -134,7 +134,7 @@ create policy "Users can delete their own push tokens"
 -- SUBSCRIPTIONS TABLE
 -- ============================================
 create table if not exists public.subscriptions (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   user_id uuid references auth.users on delete cascade,
   stripe_customer_id text,
   stripe_subscription_id text unique,
@@ -161,7 +161,7 @@ create index if not exists subscriptions_stripe_subscription_id_idx on public.su
 -- PAYMENT LOGS TABLE
 -- ============================================
 create table if not exists public.payment_logs (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   stripe_payment_intent_id text,
   amount integer,
   currency text,
@@ -175,7 +175,7 @@ create table if not exists public.payment_logs (
 -- INVOICE LOGS TABLE
 -- ============================================
 create table if not exists public.invoice_logs (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   stripe_invoice_id text,
   stripe_subscription_id text,
   amount_paid integer,
@@ -189,7 +189,7 @@ create table if not exists public.invoice_logs (
 -- NOTIFICATION LOGS TABLE
 -- ============================================
 create table if not exists public.notification_logs (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   user_id uuid references auth.users on delete cascade,
   title text,
   body text,

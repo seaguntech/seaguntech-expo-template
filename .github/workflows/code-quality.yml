@@ -1,0 +1,53 @@
+name: code-quality
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: ExpoLint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Prepare
+        uses: ./.github/composite-actions/prepare
+
+      - name: Run ExpoLint check
+        run: pnpm run lint
+
+  type-check:
+    name: Type Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Prepare
+        uses: ./.github/composite-actions/prepare
+
+      - name: Run type checks
+        run: pnpm run check-types
+
+  test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Prepare
+        uses: ./.github/composite-actions/prepare
+
+      - name: Run unit tests
+        run: pnpm run test

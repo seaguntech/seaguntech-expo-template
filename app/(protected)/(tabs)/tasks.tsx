@@ -19,7 +19,7 @@ export default function TasksScreen() {
       <View className="flex-row items-center justify-between mb-6">
         <Text className="text-2xl font-bold text-foreground">{t('tasks.title')}</Text>
         <Button variant="primary" size="sm">
-          + {t('tasks.addTask')}
+          {`+ ${t('tasks.addTask')}`}
         </Button>
       </View>
 
