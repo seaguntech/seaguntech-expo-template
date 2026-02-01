@@ -141,4 +141,4 @@ supabase functions serve
 - NativeWind docs: https://www.nativewind.dev/
 - iOS capture:
 
-https://github.com/user-attachments/assets/7a4a0d39-82ab-4ab2-8a5e-37f249da482b
+https://github.com/user-attachments/assets/f7272120-71a8-44ab-8c42-320c9568a786
