@@ -1,0 +1,92 @@
+name: Manual Submit to Stores
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to submit'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - ios
+          - android
+          - all
+      profile:
+        description: 'Build profile'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - preview
+          - staging
+          - production
+      build_id:
+        description: 'Build ID (optional - if not provided, will use latest build)'
+        required: false
+        type: string
+
+jobs:
+  submit-ios:
+    name: Submit iOS
+    if: ${{ github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' }}
+    type: submit
+    params:
+      platform: ios
+      profile: ${{ github.event.inputs.profile }}
+      build-id: ${{ github.event.inputs.build_id }}
+
+  submit-android:
+    name: Submit Android
+    if: ${{ github.event.inputs.platform == 'android' || github.event.inputs.platform == 'all' }}
+    type: submit
+    params:
+      platform: android
+      profile: ${{ github.event.inputs.profile }}
+      build-id: ${{ github.event.inputs.build_id }}
+
+  notify:
+    name: Notify Submission Status
+    needs: [submit-ios, submit-android]
+    if: ${{ always() && !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submission Summary
+        run: |
+          echo "📱 Store Submission Summary"
+          echo "=========================="
+          echo "Profile: ${{ github.event.inputs.profile }}"
+          echo ""
+
+          if [ "${{ github.event.inputs.platform }}" == "ios" ] || [ "${{ github.event.inputs.platform }}" == "all" ]; then
+            echo "iOS: ${{ needs.submit-ios.result }}"
+          fi
+
+          if [ "${{ github.event.inputs.platform }}" == "android" ] || [ "${{ github.event.inputs.platform }}" == "all" ]; then
+            echo "Android: ${{ needs.submit-android.result }}"
+          fi
+
+          # Check if all succeeded
+          IOS_SUCCESS=true
+          ANDROID_SUCCESS=true
+
+          if [ "${{ github.event.inputs.platform }}" == "ios" ] || [ "${{ github.event.inputs.platform }}" == "all" ]; then
+            if [ "${{ needs.submit-ios.result }}" != "success" ]; then
+              IOS_SUCCESS=false
+            fi
+          fi
+
+          if [ "${{ github.event.inputs.platform }}" == "android" ] || [ "${{ github.event.inputs.platform }}" == "all" ]; then
+            if [ "${{ needs.submit-android.result }}" != "success" ]; then
+              ANDROID_SUCCESS=false
+            fi
+          fi
+
+          if [ "$IOS_SUCCESS" = true ] && [ "$ANDROID_SUCCESS" = true ]; then
+            echo ""
+            echo "✅ All submissions completed successfully!"
+          else
+            echo ""
+            echo "❌ Some submissions failed"
+            exit 1
+          fi

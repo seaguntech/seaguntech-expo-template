@@ -6,9 +6,198 @@ on:
     branches:
       - main
 
+concurrency:
+  group: production-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  build:
+  install:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Cache node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
+
+  lint:
+    name: Lint
+    needs: [install]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Restore cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Run lint
+        run: pnpm lint
+
+  typecheck:
+    name: Type Check
+    needs: [install]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Restore cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Run type check
+        run: pnpm check-types
+
+  test:
+    name: Unit Tests
+    needs: [install]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Restore cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Run tests with coverage
+        run: pnpm test -- --coverage
+
+  build-ios:
+    name: Build iOS (Production)
+    needs: [lint, typecheck, test]
+    if: ${{ !failure() && !cancelled() }}
     type: build
     params:
-      platform: all
+      platform: ios
       profile: production
+      cache:
+        key: production-ios-${{ github.sha }}
+        custom_paths:
+          - node_modules
+          - ios/Pods
+
+  build-android:
+    name: Build Android (Production)
+    needs: [lint, typecheck, test]
+    if: ${{ !failure() && !cancelled() }}
+    type: build
+    params:
+      platform: android
+      profile: production
+      cache:
+        key: production-android-${{ github.sha }}
+        custom_paths:
+          - node_modules
+          - android/.gradle
+
+  submit-ios:
+    name: Submit iOS to App Store
+    needs: [build-ios]
+    if: ${{ !failure() && !cancelled() }}
+    type: submit
+    params:
+      platform: ios
+      profile: production
+      build-id: ${{ needs.build-ios.outputs.build-id }}
+
+  submit-android:
+    name: Submit Android to Play Store
+    needs: [build-android]
+    if: ${{ !failure() && !cancelled() }}
+    type: submit
+    params:
+      platform: android
+      profile: production
+      build-id: ${{ needs.build-android.outputs.build-id }}
+
+  notify:
+    name: Notify Team
+    needs: [submit-ios, submit-android]
+    if: ${{ always() && !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release Status
+        run: |
+          if [ "${{ needs.submit-ios.result }}" == "success" ] && [ "${{ needs.submit-android.result }}" == "success" ]; then
+            echo "✅ Production release completed successfully!"
+            echo "iOS and Android builds have been submitted to the stores."
+          else
+            echo "❌ Production release failed or partially failed"
+            echo "iOS: ${{ needs.submit-ios.result }}"
+            echo "Android: ${{ needs.submit-android.result }}"
+            exit 1
+          fi

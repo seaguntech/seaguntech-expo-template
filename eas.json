@@ -1,23 +1,87 @@
 {
   "cli": {
     "version": ">= 16.0.1",
-    "appVersionSource": "remote"
+    "appVersionSource": "remote",
+    "promptToConfigurePushNotifications": false
   },
   "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "autoIncrement": true
+      "autoIncrement": true,
+      "ios": {
+        "resourceClass": "m-medium"
+      },
+      "android": {
+        "resourceClass": "medium"
+      },
+      "cache": {
+        "key": "development-{{ arch }}-{{ .Environment.GITHUB_SHA }}",
+        "customPaths": ["node_modules", "ios/Pods", "android/.gradle"]
+      }
     },
     "preview": {
       "distribution": "internal",
-      "autoIncrement": true
+      "autoIncrement": true,
+      "ios": {
+        "resourceClass": "m-medium"
+      },
+      "android": {
+        "resourceClass": "medium"
+      },
+      "cache": {
+        "key": "preview-{{ arch }}-{{ .Environment.GITHUB_SHA }}",
+        "customPaths": ["node_modules", "ios/Pods", "android/.gradle"]
+      }
+    },
+    "staging": {
+      "distribution": "internal",
+      "autoIncrement": true,
+      "env": {
+        "APP_ENV": "staging"
+      },
+      "ios": {
+        "resourceClass": "m-medium",
+        "buildConfiguration": "Release"
+      },
+      "android": {
+        "resourceClass": "medium",
+        "buildType": "apk"
+      },
+      "cache": {
+        "key": "staging-{{ arch }}-{{ .Environment.GITHUB_SHA }}",
+        "customPaths": ["node_modules", "ios/Pods", "android/.gradle"]
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "APP_ENV": "production"
+      },
+      "ios": {
+        "resourceClass": "m-medium"
+      },
+      "android": {
+        "resourceClass": "medium"
+      },
+      "cache": {
+        "key": "production-{{ arch }}-{{ .Environment.GITHUB_SHA }}",
+        "customPaths": ["node_modules", "ios/Pods", "android/.gradle"]
+      }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "ascAppId": "${EXPO_PUBLIC_APPLE_APP_ID}",
+        "ascApiKeyPath": "./AuthKey.p8",
+        "ascApiKeyIssuerId": "${EXPO_PUBLIC_APPLE_ISSUER_ID}",
+        "ascApiKeyId": "${EXPO_PUBLIC_APPLE_KEY_ID}"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account.json",
+        "track": "internal"
+      }
+    }
   }
 }
