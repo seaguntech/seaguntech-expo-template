@@ -24,6 +24,7 @@
     "supabase:reset": "supabase db reset",
     "supabase:seed": "tsx supabase/scripts/seed.ts",
     "supabase:setup": "npm run supabase:migrate && npm run supabase:seed",
+    "supabase:types": "supabase gen types typescript --local > src/shared/types/database.types.ts",
     "e2e:install": "curl -fsSL \"https://get.maestro.mobile.dev\" | bash",
     "e2e:test": "maestro test e2e/maestro/flows",
     "e2e:test:smoke": "maestro test e2e/maestro/config/test-suites.yaml --suite smoke",

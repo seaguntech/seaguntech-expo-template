@@ -1,0 +1,586 @@
+openapi: 3.0.0
+info:
+  title: Seaguntech Edge Functions API
+  description: |
+    API documentation for Seaguntech Expo Template Supabase Edge Functions.
+    These functions handle payments, AI completions, email sending, and push notifications.
+  version: 1.0.0
+  contact:
+    name: Seaguntech Support
+    email: support@seaguntech.com
+
+servers:
+  - url: https://{project_ref}.supabase.co/functions/v1
+    variables:
+      project_ref:
+        default: your-project-ref
+        description: Your Supabase project reference
+
+paths:
+  /create-payment-intent:
+    post:
+      summary: Create a Stripe Payment Intent
+      description: |
+        Creates a Stripe Payment Intent for processing payments.
+        Returns a client secret that can be used to complete the payment on the client side.
+      operationId: createPaymentIntent
+      tags:
+        - Payments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentIntentRequest'
+      responses:
+        '200':
+          description: Payment intent created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePaymentIntentResponse'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: Request body too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /create-stripe-checkout:
+    post:
+      summary: Create a Stripe Checkout Session
+      description: |
+        Creates a Stripe Checkout session for subscription or one-time payments.
+        Returns a session ID and URL to redirect the user to Stripe's checkout page.
+      operationId: createStripeCheckout
+      tags:
+        - Payments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCheckoutRequest'
+      responses:
+        '200':
+          description: Checkout session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCheckoutResponse'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: Request body too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /stripe-webhooks:
+    post:
+      summary: Stripe Webhook Handler
+      description: |
+        Handles Stripe webhook events for payment and subscription updates.
+        This endpoint should be configured in your Stripe dashboard.
+        **Note:** Requires valid Stripe signature in the header.
+      operationId: stripeWebhooks
+      tags:
+        - Payments
+        - Webhooks
+      parameters:
+        - name: stripe-signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Stripe webhook signature for verification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Stripe event object
+      responses:
+        '200':
+          description: Webhook processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  received:
+                    type: boolean
+                    example: true
+        '400':
+          description: Invalid signature or payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: Payload too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ai-completion:
+    post:
+      summary: AI Text Completion
+      description: |
+        Generates AI text completions using OpenAI's API.
+        Supports both regular and streaming responses.
+      operationId: aiCompletion
+      tags:
+        - AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AICompletionRequest'
+      responses:
+        '200':
+          description: Completion generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AICompletionResponse'
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-sent events for streaming responses
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: Request body too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /resend-email:
+    post:
+      summary: Send Email
+      description: |
+        Sends emails using the Resend service.
+        Supports both template-based and custom HTML/text emails.
+      operationId: resendEmail
+      tags:
+        - Email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailRequest'
+      responses:
+        '200':
+          description: Email sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailResponse'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: Request body too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /send-notifications:
+    post:
+      summary: Send Push Notifications
+      description: |
+        Sends push notifications to users via Expo Push Service.
+        Can target single user or multiple users.
+      operationId: sendNotifications
+      tags:
+        - Notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendNotificationRequest'
+      responses:
+        '200':
+          description: Notifications sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendNotificationResponse'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No push tokens found for users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '413':
+          description: Request body too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CreatePaymentIntentRequest:
+      type: object
+      required:
+        - amount
+        - currency
+      properties:
+        amount:
+          type: integer
+          description: Amount in smallest currency unit (e.g., cents for USD)
+          minimum: 1
+          maximum: 99999999
+          example: 2000
+        currency:
+          type: string
+          description: ISO 4217 currency code (3 letters)
+          minLength: 3
+          maxLength: 3
+          example: 'usd'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional metadata to store with the payment
+          example:
+            orderId: '12345'
+            customerName: 'John Doe'
+        customerId:
+          type: string
+          description: Optional Stripe customer ID
+          example: 'cus_1234567890'
+
+    CreatePaymentIntentResponse:
+      type: object
+      properties:
+        clientSecret:
+          type: string
+          description: Client secret for completing the payment
+          example: 'pi_1234567890_secret_xyz'
+        paymentIntentId:
+          type: string
+          description: Payment intent ID
+          example: 'pi_1234567890'
+
+    CreateCheckoutRequest:
+      type: object
+      required:
+        - priceId
+        - successUrl
+        - cancelUrl
+      properties:
+        priceId:
+          type: string
+          description: Stripe price ID (starts with 'price_')
+          pattern: '^price_.*'
+          example: 'price_1234567890'
+        successUrl:
+          type: string
+          format: uri
+          description: URL to redirect after successful payment
+          example: 'https://seaguntech.com/success'
+        cancelUrl:
+          type: string
+          format: uri
+          description: URL to redirect if user cancels
+          example: 'https://seaguntech.com/cancel'
+        customerId:
+          type: string
+          description: Optional Stripe customer ID
+          example: 'cus_1234567890'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional metadata
+        mode:
+          type: string
+          enum: [payment, subscription]
+          default: subscription
+          description: Checkout mode
+
+    CreateCheckoutResponse:
+      type: object
+      properties:
+        sessionId:
+          type: string
+          description: Checkout session ID
+          example: 'cs_1234567890'
+        url:
+          type: string
+          format: uri
+          description: Checkout URL to redirect user
+          example: 'https://checkout.stripe.com/pay/cs_1234567890'
+
+    AICompletionRequest:
+      type: object
+      required:
+        - messages
+      properties:
+        messages:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            type: object
+            required:
+              - role
+              - content
+            properties:
+              role:
+                type: string
+                enum: [user, assistant, system]
+                example: 'user'
+              content:
+                type: string
+                minLength: 1
+                maxLength: 10000
+                example: 'Hello, how are you?'
+        model:
+          type: string
+          default: 'gpt-4o-mini'
+          example: 'gpt-4o-mini'
+        temperature:
+          type: number
+          minimum: 0
+          maximum: 2
+          default: 0.7
+          example: 0.7
+        maxTokens:
+          type: integer
+          minimum: 1
+          maximum: 4096
+          default: 2048
+          example: 2048
+        stream:
+          type: boolean
+          default: false
+          example: false
+
+    AICompletionResponse:
+      type: object
+      properties:
+        content:
+          type: string
+          description: Generated completion text
+          example: "I'm doing well, thank you for asking!"
+        usage:
+          type: object
+          properties:
+            promptTokens:
+              type: integer
+              example: 5
+            completionTokens:
+              type: integer
+              example: 10
+            totalTokens:
+              type: integer
+              example: 15
+
+    SendEmailRequest:
+      type: object
+      required:
+        - to
+      oneOf:
+        - required: [templateId]
+        - required: [html]
+        - required: [text]
+      properties:
+        to:
+          oneOf:
+            - type: string
+              format: email
+              example: 'user@example.com'
+            - type: array
+              maxItems: 50
+              items:
+                type: string
+                format: email
+              example: ['user1@example.com', 'user2@example.com']
+        subject:
+          type: string
+          maxLength: 200
+          example: 'Welcome to Seaguntech!'
+        templateId:
+          type: string
+          enum: [welcome, passwordReset, invoice]
+          description: Predefined email template
+          example: 'welcome'
+        templateData:
+          type: object
+          description: Data to populate template variables
+          example:
+            name: 'John Doe'
+            appUrl: 'https://seaguntech.com'
+        html:
+          type: string
+          maxLength: 50000
+          description: Custom HTML content
+        text:
+          type: string
+          maxLength: 10000
+          description: Plain text content
+
+    SendEmailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        messageId:
+          type: string
+          nullable: true
+          example: 'msg_1234567890'
+
+    SendNotificationRequest:
+      type: object
+      required:
+        - title
+        - body
+      anyOf:
+        - required: [userId]
+        - required: [userIds]
+      properties:
+        userId:
+          type: string
+          description: Single user ID to notify
+          example: '123e4567-e89b-12d3-a456-426614174000'
+        userIds:
+          type: array
+          maxItems: 100
+          items:
+            type: string
+          description: Multiple user IDs to notify
+          example: ['123e4567-e89b-12d3-a456-426614174000', '223e4567-e89b-12d3-a456-426614174001']
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: 'New Task Assigned'
+        body:
+          type: string
+          minLength: 1
+          maxLength: 500
+          example: 'You have been assigned a new task: Review PR'
+        data:
+          type: object
+          description: Additional data to include with notification
+          example:
+            taskId: 'task_123'
+            priority: 'high'
+        badge:
+          type: integer
+          minimum: 0
+          description: Badge count to display
+          example: 1
+        sound:
+          type: string
+          default: 'default'
+          example: 'default'
+        channelId:
+          type: string
+          default: 'default'
+          example: 'tasks'
+
+    SendNotificationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        sent:
+          type: integer
+          description: Number of notifications sent
+          example: 5
+        tickets:
+          type: array
+          items:
+            type: object
+          description: Expo push tickets for tracking
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 'Invalid request parameters'
+        errors:
+          type: array
+          items:
+            type: string
+          description: Detailed validation errors
+          example: ['Amount must be a positive number', 'Currency is required']
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+      description: Supabase anonymous API key
+
+security:
+  - ApiKeyAuth: []

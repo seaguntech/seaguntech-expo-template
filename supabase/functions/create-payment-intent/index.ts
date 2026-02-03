@@ -1,21 +1,87 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import Stripe from 'https://esm.sh/stripe@14.14.0?target=deno'
+import {
+  validateCreatePaymentIntent,
+  checkPayloadSize,
+  CreatePaymentIntentRequest,
+} from '../lib/validation.ts'
+import { verifyAuth, unauthorizedResponse, AuthUser } from '../lib/auth.ts'
+import { checkRateLimit, rateLimitResponse, addRateLimitHeaders } from '../lib/rate-limit.ts'
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') ?? '', {
   apiVersion: '2023-10-16',
   httpClient: Stripe.createFetchHttpClient(),
 })
 
+const FUNCTION_NAME = 'create-payment-intent'
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-interface CreatePaymentIntentRequest {
-  amount: number
-  currency: string
-  metadata?: Record<string, string>
-  customerId?: string
+async function handleRequest(req: Request, user: AuthUser): Promise<Response> {
+  // Check payload size (1MB limit)
+  const bodyText = await req.text()
+  const sizeCheck = checkPayloadSize(bodyText, 1024 * 1024)
+  if (!sizeCheck.valid) {
+    return new Response(JSON.stringify({ error: sizeCheck.error }), {
+      status: 413,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
+  // Parse and validate request body
+  let body: unknown
+  try {
+    body = JSON.parse(bodyText)
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid JSON in request body' }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
+  const validation = validateCreatePaymentIntent(body)
+  if (!validation.valid) {
+    return new Response(
+      JSON.stringify({
+        error: validation.error,
+        errors: validation.errors,
+      }),
+      {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      },
+    )
+  }
+
+  const { amount, currency, metadata, customerId } = validation.data as CreatePaymentIntentRequest
+
+  // Create payment intent with user tracking
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount,
+    currency: currency.toLowerCase(),
+    metadata: {
+      ...metadata,
+      user_id: user.id, // Track which user initiated the payment
+    },
+    ...(customerId && { customer: customerId }),
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  })
+
+  return new Response(
+    JSON.stringify({
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id,
+    }),
+    {
+      status: 200,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    },
+  )
 }
 
 serve(async (req) => {
@@ -25,44 +91,23 @@ serve(async (req) => {
   }
 
   try {
-    const { amount, currency, metadata, customerId }: CreatePaymentIntentRequest = await req.json()
-
-    // Validate required fields
-    if (!amount || amount <= 0) {
-      return new Response(JSON.stringify({ error: 'Invalid amount' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+    // Verify authentication
+    const { user, error: authError } = await verifyAuth(req)
+    if (authError || !user) {
+      return unauthorizedResponse(authError ?? 'Authentication required', corsHeaders)
     }
 
-    if (!currency) {
-      return new Response(JSON.stringify({ error: 'Currency is required' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+    // Check rate limit
+    const rateLimitResult = checkRateLimit(user.id, FUNCTION_NAME)
+    if (!rateLimitResult.allowed) {
+      return rateLimitResponse(rateLimitResult, corsHeaders)
     }
 
-    // Create payment intent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: currency.toLowerCase(),
-      metadata: metadata ?? {},
-      ...(customerId && { customer: customerId }),
-      automatic_payment_methods: {
-        enabled: true,
-      },
-    })
+    // Handle the request
+    const response = await handleRequest(req, user)
 
-    return new Response(
-      JSON.stringify({
-        clientSecret: paymentIntent.client_secret,
-        paymentIntentId: paymentIntent.id,
-      }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      },
-    )
+    // Add rate limit headers to response
+    return addRateLimitHeaders(response, rateLimitResult)
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return new Response(JSON.stringify({ error: errorMessage }), {
