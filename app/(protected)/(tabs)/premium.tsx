@@ -18,7 +18,11 @@ export default function PremiumScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-background" contentContainerClassName="p-6">
+    <ScrollView
+      className="flex-1 bg-background"
+      contentContainerClassName="p-6"
+      testID="premium-screen"
+    >
       <Card variant="elevated" className="mb-6 bg-primary/5">
         <CardContent>
           <View className="items-center py-4">

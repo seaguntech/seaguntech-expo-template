@@ -28,6 +28,7 @@ export function AppleProviderButton({
     <Pressable
       onPress={onPress}
       disabled={isLoading}
+      testID="auth-apple-button"
       className={cn(
         'flex-row items-center justify-center bg-black py-3.5 px-4 rounded-xl',
         isLoading && 'opacity-50',

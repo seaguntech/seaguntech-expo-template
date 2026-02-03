@@ -1,0 +1,108 @@
+appId: com.app.seaguntechexpotemplate
+name: Tasks - CRUD Operations
+tags:
+  - tasks
+  - crud
+  - smoke
+
+---
+- launchApp:
+    clearState: true
+
+# Login first
+- runFlow: ../auth/login.yaml
+
+# Navigate to tasks tab
+- tapOn:
+    id: 'tab-tasks'
+- extendedWaitUntil:
+    visible:
+      id: 'tasks-screen'
+    timeout: 10000
+
+# Create a new task
+- tapOn:
+    id: 'task-add-button'
+- extendedWaitUntil:
+    visible:
+      id: 'task-title-input'
+    timeout: 5000
+
+# Fill task details using testID selectors
+- tapOn:
+    id: 'task-title-input'
+- inputText: 'Test Task ${RANDOM}'
+
+- tapOn:
+    id: 'task-description-input'
+- inputText: 'This is a test task created by Maestro E2E test'
+
+# Set priority to high
+- tapOn:
+    id: 'task-priority-high'
+
+# Save task
+- tapOn:
+    id: 'task-create-button'
+
+# Wait for task to be created and list to refresh
+- extendedWaitUntil:
+    visible: 'Test Task'
+    timeout: 10000
+
+# Verify task created
+- assertVisible: 'Test Task'
+
+# Edit task - tap on task card
+- tapOn: 'Test Task'
+- extendedWaitUntil:
+    visible:
+      id: 'task-edit-button'
+    timeout: 5000
+
+- tapOn:
+    id: 'task-edit-button'
+
+# Update title
+- tapOn:
+    id: 'task-title-input'
+- inputText: ' - Updated'
+
+- tapOn:
+    id: 'task-save-button'
+
+# Wait for update to complete
+- extendedWaitUntil:
+    visible: 'Updated'
+    timeout: 10000
+
+# Verify task updated
+- assertVisible: 'Updated'
+
+# Mark as complete
+- tapOn: 'Updated'
+- tapOn:
+    id: 'task-complete-button'
+
+# Wait for status change
+- extendedWaitUntil:
+    visible:
+      id: 'task-status-completed'
+    timeout: 5000
+
+# Delete task
+- tapOn: 'Updated'
+- tapOn:
+    id: 'task-delete-button'
+
+# Confirm deletion
+- tapOn:
+    id: 'confirm-delete-button'
+
+# Wait for deletion to complete
+- extendedWaitUntil:
+    notVisible: 'Updated'
+    timeout: 10000
+
+# Verify task deleted
+- assertNotVisible: 'Updated'

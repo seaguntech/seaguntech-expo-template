@@ -15,10 +15,14 @@ export default function TasksScreen() {
   ]
 
   return (
-    <ScrollView className="flex-1 bg-background" contentContainerClassName="p-6">
+    <ScrollView
+      className="flex-1 bg-background"
+      contentContainerClassName="p-6"
+      testID="tasks-screen"
+    >
       <View className="flex-row items-center justify-between mb-6">
         <Text className="text-2xl font-bold text-foreground">{t('tasks.title')}</Text>
-        <Button variant="primary" size="sm">
+        <Button variant="primary" size="sm" testID="task-add-button">
           {`+ ${t('tasks.addTask')}`}
         </Button>
       </View>

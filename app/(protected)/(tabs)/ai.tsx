@@ -10,6 +10,7 @@ export default function AIScreen() {
     <ScrollView
       className="flex-1 bg-background"
       contentContainerClassName="flex-1 justify-center items-center p-6"
+      testID="ai-screen"
     >
       <View className="items-center mb-8">
         <View className="w-24 h-24 bg-primary/10 rounded-full items-center justify-center mb-4">

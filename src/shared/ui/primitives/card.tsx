@@ -7,6 +7,7 @@ interface CardProps {
   padding?: 'none' | 'sm' | 'md' | 'lg'
   children: React.ReactNode
   className?: string
+  testID?: string
 }
 
 const variantStyles = {
@@ -22,9 +23,18 @@ const paddingStyles = {
   lg: 'p-6',
 }
 
-export function Card({ variant = 'default', padding = 'md', children, className }: CardProps) {
+export function Card({
+  variant = 'default',
+  padding = 'md',
+  children,
+  className,
+  testID,
+}: CardProps) {
   return (
-    <View className={cn('rounded-xl', variantStyles[variant], paddingStyles[padding], className)}>
+    <View
+      className={cn('rounded-xl', variantStyles[variant], paddingStyles[padding], className)}
+      testID={testID}
+    >
       {children}
     </View>
   )

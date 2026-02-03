@@ -14,6 +14,7 @@ interface ButtonProps {
   className?: string
   textClassName?: string
   onPress?: () => void
+  testID?: string
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
@@ -61,6 +62,7 @@ export function Button({
   className,
   textClassName,
   onPress,
+  testID,
 }: ButtonProps) {
   const isDisabled = disabled || isLoading
 
@@ -68,6 +70,7 @@ export function Button({
     <Pressable
       onPress={onPress}
       disabled={isDisabled}
+      testID={testID}
       className={cn(
         'flex-row items-center justify-center',
         variantStyles[variant],

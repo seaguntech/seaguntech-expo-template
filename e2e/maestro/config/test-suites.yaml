@@ -1,0 +1,35 @@
+# Maestro test suite configuration
+# This file defines test suites for organized test execution
+
+# Smoke tests - quick verification
+smoke:
+  - flows/auth/login.yaml
+  - flows/navigation/tab-navigation.yaml
+
+# Authentication suite
+auth:
+  - flows/auth/login.yaml
+  - flows/auth/signup.yaml
+
+# Feature tests
+features:
+  - flows/features/tasks.yaml
+
+# Full regression suite
+regression:
+  - flows/auth/login.yaml
+  - flows/auth/signup.yaml
+  - flows/onboarding/complete-onboarding.yaml
+  - flows/navigation/tab-navigation.yaml
+  - flows/features/tasks.yaml
+
+# CI/CD suite (runs on pull requests)
+ci:
+  - flows/auth/login.yaml
+  - flows/navigation/tab-navigation.yaml
+
+# Production sanity check
+production:
+  - flows/auth/login.yaml
+  - flows/navigation/tab-navigation.yaml
+  - flows/features/tasks.yaml

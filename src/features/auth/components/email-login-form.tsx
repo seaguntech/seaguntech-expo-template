@@ -8,7 +8,12 @@ import { useTranslation } from 'react-i18next'
 
 interface EmailLoginFormProps {
   mode: 'sign-in' | 'sign-up'
-  onSubmit: (email: string, password: string, displayName?: string) => Promise<void>
+  onSubmit: (
+    email: string,
+    password: string,
+    displayName?: string,
+    confirmPassword?: string,
+  ) => Promise<void>
   isLoading?: boolean
   error?: string | null
   className?: string
@@ -63,6 +68,7 @@ export function EmailLoginForm({
         values.email,
         values.password,
         mode === 'sign-up' ? values.displayName : undefined,
+        mode === 'sign-up' ? values.confirmPassword : undefined,
       )
     } catch (err) {
       setError('root', {
@@ -79,6 +85,7 @@ export function EmailLoginForm({
         <FormInput
           control={control}
           name="displayName"
+          testID="auth-displayname-input"
           rules={{
             validate: (value) => {
               if (!value) return true
@@ -98,6 +105,7 @@ export function EmailLoginForm({
       <FormInput
         control={control}
         name="email"
+        testID="auth-email-input"
         rules={{
           required: emailRequired,
           validate: (value) => isValidEmail(value ?? '') || invalidEmail,
@@ -115,6 +123,7 @@ export function EmailLoginForm({
       <FormInput
         control={control}
         name="password"
+        testID="auth-password-input"
         rules={{
           required: passwordRequired,
           validate: (value) => {
@@ -138,6 +147,7 @@ export function EmailLoginForm({
         <FormInput
           control={control}
           name="confirmPassword"
+          testID="auth-confirmpassword-input"
           rules={{
             required: passwordRequired,
             validate: (value) => value === getValues('password') || passwordMismatch,
@@ -155,8 +165,8 @@ export function EmailLoginForm({
       )}
 
       {rootError && (
-        <View className="bg-destructive/10 p-3 rounded-lg">
-          <Text className="text-destructive text-sm text-center">{rootError}</Text>
+        <View className="bg-destructive/10 rounded-lg mb-[-10px]">
+          <Text className="text-destructive text-lg text-center">{rootError}</Text>
         </View>
       )}
 
@@ -166,7 +176,8 @@ export function EmailLoginForm({
         onPress={submit}
         isLoading={isLoading || isSubmitting}
         disabled={isLoading || isSubmitting}
-        className="mt-2"
+        className={cn('mt-2', rootError && 'mt-0')}
+        testID={mode === 'sign-in' ? 'auth-signin-button' : 'auth-signup-button'}
       >
         {mode === 'sign-in' ? t('auth.signIn') : t('auth.createAccount')}
       </Button>

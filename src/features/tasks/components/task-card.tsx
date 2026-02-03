@@ -48,11 +48,16 @@ export const TaskCard = memo(function TaskCard({
   const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && !isCompleted
 
   return (
-    <Card className={cn(isCompleted && 'opacity-60')}>
+    <Card className={cn(isCompleted && 'opacity-60')} testID={`task-card-${task.id}`}>
       <CardContent className="py-3">
-        <Pressable onPress={handlePress} className="flex-row items-start">
+        <Pressable
+          onPress={handlePress}
+          className="flex-row items-start"
+          testID={`task-card-press-${task.id}`}
+        >
           <Pressable
             onPress={handleToggleComplete}
+            testID={`task-complete-button-${task.id}`}
             className={cn(
               'w-6 h-6 rounded-full border-2 mr-3 mt-0.5 items-center justify-center',
               isCompleted ? 'bg-success border-success' : 'border-muted-foreground',
@@ -115,7 +120,11 @@ export const TaskCard = memo(function TaskCard({
           </View>
 
           {onDelete && (
-            <Pressable onPress={handleDelete} className="w-8 h-8 items-center justify-center">
+            <Pressable
+              onPress={handleDelete}
+              className="w-8 h-8 items-center justify-center"
+              testID={`task-delete-button-${task.id}`}
+            >
               <Text className="text-muted-foreground">🗑</Text>
             </Pressable>
           )}

@@ -24,6 +24,7 @@ export interface InputProps {
   numberOfLines?: number
   className?: string
   inputClassName?: string
+  testID?: string
 }
 
 export function Input({
@@ -48,6 +49,7 @@ export function Input({
   numberOfLines = 1,
   className,
   inputClassName,
+  testID,
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false)
 
@@ -89,6 +91,7 @@ export function Input({
           multiline={multiline}
           numberOfLines={numberOfLines}
           textAlignVertical={multiline ? 'top' : 'center'}
+          testID={testID}
         />
         {rightIcon && <View className="ml-2">{rightIcon}</View>}
       </View>

@@ -32,6 +32,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <IconSymbol name={focused ? 'house.fill' : 'house'} color={color} size={24} />
           ),
+          tabBarButtonTestID: 'tab-home',
           headerLeft: () => (
             <Pressable onPress={toggle} className="ml-4">
               <IconSymbol name="line.3.horizontal" color={colors.foreground} size={24} />
@@ -50,6 +51,7 @@ export default function TabLayout() {
               size={24}
             />
           ),
+          tabBarButtonTestID: 'tab-tasks',
         }}
       />
       <Tabs.Screen
@@ -63,6 +65,7 @@ export default function TabLayout() {
               size={24}
             />
           ),
+          tabBarButtonTestID: 'tab-ai',
         }}
       />
       <Tabs.Screen
@@ -76,6 +79,7 @@ export default function TabLayout() {
               size={24}
             />
           ),
+          tabBarButtonTestID: 'tab-profile',
         }}
       />
       <Tabs.Screen
@@ -85,6 +89,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <IconSymbol name={focused ? 'gear' : 'gear'} color={color} size={24} />
           ),
+          tabBarButtonTestID: 'tab-settings',
         }}
       />
       <Tabs.Screen
@@ -113,6 +118,7 @@ export default function TabLayout() {
         options={{
           href: null,
           title: 'Premium',
+          tabBarButtonTestID: 'tab-premium',
         }}
       />
     </Tabs>

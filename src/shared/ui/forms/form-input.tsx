@@ -13,6 +13,7 @@ interface FormInputProps<T extends FieldValues> {
   name: Path<T>
   rules?: RegisterOptions<T, Path<T>>
   inputProps?: Omit<InputProps, 'value' | 'onChangeText' | 'onBlur' | 'error'>
+  testID?: string
 }
 
 export function FormInput<T extends FieldValues>({
@@ -20,6 +21,7 @@ export function FormInput<T extends FieldValues>({
   name,
   rules,
   inputProps,
+  testID,
 }: FormInputProps<T>) {
   return (
     <Controller
@@ -33,6 +35,7 @@ export function FormInput<T extends FieldValues>({
           onChangeText={onChange}
           onBlur={onBlur}
           error={error?.message}
+          testID={testID ?? inputProps?.testID}
         />
       )}
     />

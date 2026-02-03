@@ -26,6 +26,7 @@ export interface SignInCredentials {
 export interface SignUpCredentials {
   email: string
   password: string
+  confirmPassword: string
   displayName?: string
 }
 

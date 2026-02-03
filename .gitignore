@@ -33,6 +33,8 @@ yarn-error.*
 # local env files
 .env*.local
 .env
+.env.staging
+.env.e2e
 
 # typescript
 *.tsbuildinfo
@@ -45,6 +47,10 @@ app-example
 
 .jest
 coverage
+
+# Dependency analysis
+dependency-graph.svg
+.madge
 
 # Agentic / AI Tools
 .agent

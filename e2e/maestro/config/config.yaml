@@ -1,0 +1,73 @@
+# Maestro configuration for Seaguntech Expo Template
+# Place this file at: ~/.maestro/config.yaml or in your project root as .maestro/config.yaml
+
+# Default timeout for all commands (in milliseconds)
+defaultTimeout: 10000
+
+# Extended timeout for network operations
+extendedTimeout: 30000
+
+# Animation configuration
+animationSpeed: 1.0
+
+# Screenshot configuration
+screenshots:
+  enabled: true
+  path: ./e2e/maestro/screenshots
+  onFailure: true
+  onSuccess: false
+
+# Debug configuration
+debug:
+  enabled: false
+  outputPath: ./e2e/maestro/debug
+
+# Environment variables that will be available in all flows
+env:
+  TEST_EMAIL: ${TEST_EMAIL:-test@example.com}
+  TEST_PASSWORD: ${TEST_PASSWORD:-testpassword123}
+  TEST_USER_NAME: ${TEST_USER_NAME:-Test User}
+
+# Retry configuration for flaky tests
+retries:
+  enabled: true
+  maxRetries: 2
+
+# iOS specific settings
+ios:
+  # Device settings
+  device: ${IOS_DEVICE:-iPhone 15}
+  osVersion: ${IOS_VERSION:-17.0}
+
+  # App settings
+  appId: com.app.seaguntechexpotemplate
+
+  # Simulator settings
+  eraseSimulator: false
+  headless: false
+
+# Android specific settings
+android:
+  # Device settings
+  device: ${ANDROID_DEVICE:-emulator-5554}
+
+  # App settings
+  appId: com.app.seaguntechexpotemplate
+
+  # Emulator settings
+  eraseEmulator: false
+  headless: false
+
+# Execution configuration
+execution:
+  # Run flows in parallel
+  parallel: false
+
+  # Number of parallel workers (if parallel is true)
+  workers: 1
+
+  # Fail fast on first error
+  failFast: true
+
+  # Continue on failure (for CI)
+  continueOnFailure: false

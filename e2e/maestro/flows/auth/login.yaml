@@ -1,0 +1,79 @@
+appId: com.app.seaguntechexpotemplate
+name: Authentication - Login Flow
+tags:
+  - auth
+  - critical
+  - smoke
+
+# Environment variables for credentials
+# Pass via: maestro test -e TEST_EMAIL=your@email.com -e TEST_PASSWORD=yourpass login.yaml
+env:
+  TEST_EMAIL: ${TEST_EMAIL}
+  TEST_PASSWORD: ${TEST_PASSWORD}
+
+---
+# Test successful login flow
+- launchApp:
+    clearState: true
+
+# Wait for app to fully initialize and stabilize
+- extendedWaitUntil:
+    visible: 'Seaguntech'
+    timeout: 15000
+
+# The app shows Welcome screen first with "Create Account" and "Sign In" buttons
+# Tap on Sign In to go to login screen
+- tapOn: 'Sign In'
+
+# Wait for login form to appear - look for Email input field
+- extendedWaitUntil:
+    visible: 'Email'
+    timeout: 10000
+
+# Enter credentials from environment variables
+- tapOn: 'email@example.com'
+- inputText: ${TEST_EMAIL}
+
+- tapOn: '••••••••'
+- inputText: ${TEST_PASSWORD}
+
+# Hide keyboard before tapping submit button
+- hideKeyboard
+
+# Scroll down to make sure Sign In button is visible
+- scroll
+
+# Submit login - tap on Sign In button in the form
+- tapOn: 'Sign In'
+
+# Wait for login to complete - either onboarding or home
+- extendedWaitUntil:
+    visible: '.*'
+    timeout: 30000
+
+# Handle onboarding if this is first login (check for Welcome screen)
+- runFlow:
+    when:
+      visible: 'Welcome to Seaguntech'
+    file: ../onboarding/complete-onboarding.yaml
+
+# Wait for home screen after onboarding
+- extendedWaitUntil:
+    visible: 'Home'
+    timeout: 15000
+
+# Verify successful login - home screen and tabs visible
+- assertVisible: 'Home'
+- assertVisible:
+    text: '.*Tasks.*'
+
+# Navigate to Profile tab
+- tapOn:
+    text: '.*Profile.*'
+- extendedWaitUntil:
+    visible: '.*Profile.*'
+    timeout: 10000
+
+# Verify profile screen loaded
+- assertVisible:
+    text: '.*Profile.*'

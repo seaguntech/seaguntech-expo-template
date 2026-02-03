@@ -15,7 +15,11 @@ export default function HomeScreen() {
   const greeting = getGreeting()
 
   return (
-    <ScrollView className="flex-1 bg-background" contentContainerClassName="p-4 pb-8">
+    <ScrollView
+      className="flex-1 bg-background"
+      contentContainerClassName="p-4 pb-8"
+      testID="home-screen"
+    >
       <View className="flex-row items-center justify-between mb-6">
         <View className="flex-1">
           <Text className="text-muted-foreground text-base">{greeting}</Text>

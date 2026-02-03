@@ -21,7 +21,11 @@ export default function ProfileScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-background" contentContainerClassName="p-6">
+    <ScrollView
+      className="flex-1 bg-background"
+      contentContainerClassName="p-6"
+      testID="profile-screen"
+    >
       <View className="items-center mb-6">
         <View className="relative">
           <Avatar src={avatarUrl} fallback={displayName ?? user?.email} size="xl" />

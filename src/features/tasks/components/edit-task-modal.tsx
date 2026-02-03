@@ -124,11 +124,15 @@ export function EditTaskModal({
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View className="flex-1 bg-background">
         <View className="flex-row items-center justify-between px-4 py-3 border-b border-border">
-          <Pressable onPress={onClose}>
+          <Pressable onPress={onClose} testID="task-edit-cancel-button">
             <Text className="text-primary text-base">Cancel</Text>
           </Pressable>
           <Text className="font-semibold text-foreground">Edit Task</Text>
-          <Pressable onPress={submit} disabled={isLoading || isSubmitting}>
+          <Pressable
+            onPress={submit}
+            disabled={isLoading || isSubmitting}
+            testID="task-save-button"
+          >
             <Text
               className={cn(
                 'text-base font-semibold',
@@ -146,6 +150,7 @@ export function EditTaskModal({
             <FormInput
               control={control}
               name="title"
+              testID="task-edit-title-input"
               rules={{ required: 'Title is required' }}
               inputProps={{ placeholder: 'Task title', returnKeyType: 'next' }}
             />
@@ -259,7 +264,7 @@ export function EditTaskModal({
         </ScrollView>
 
         <View className="p-4 border-t border-border">
-          <Button variant="destructive" onPress={onClose}>
+          <Button variant="destructive" onPress={onClose} testID="task-delete-confirm-button">
             Delete Task
           </Button>
         </View>

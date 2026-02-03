@@ -23,7 +23,13 @@
     "supabase:migrate:local": "supabase migration up --local",
     "supabase:reset": "supabase db reset",
     "supabase:seed": "tsx supabase/scripts/seed.ts",
-    "supabase:setup": "npm run supabase:migrate && npm run supabase:seed"
+    "supabase:setup": "npm run supabase:migrate && npm run supabase:seed",
+    "e2e:install": "curl -fsSL \"https://get.maestro.mobile.dev\" | bash",
+    "e2e:test": "maestro test e2e/maestro/flows",
+    "e2e:test:smoke": "maestro test e2e/maestro/config/test-suites.yaml --suite smoke",
+    "e2e:test:ci": "maestro test e2e/maestro/config/test-suites.yaml --suite ci",
+    "e2e:test:auth": "maestro test e2e/maestro/flows/auth",
+    "e2e:record": "maestro record e2e/maestro/flows"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

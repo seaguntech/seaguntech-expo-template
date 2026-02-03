@@ -1,0 +1,33 @@
+appId: com.app.seaguntechexpotemplate
+name: Complete Onboarding Flow
+tags:
+  - onboarding
+  - setup
+
+---
+# Onboarding is a subflow that can be called by other tests
+# Complete all onboarding steps
+
+# Step 1: Welcome to Seaguntech
+- extendedWaitUntil:
+    visible: 'Welcome to Seaguntech'
+    timeout: 10000
+
+# Tap Next to proceed to step 2
+- tapOn: 'Next'
+
+# Step 2: Enable Notifications
+- extendedWaitUntil:
+    visible: 'Enable Notifications'
+    timeout: 5000
+
+# Tap Next to skip notifications (don't request permission in tests)
+- tapOn: 'Next'
+
+# Step 3: You're All Set!
+- extendedWaitUntil:
+    visible: "You're All Set!"
+    timeout: 5000
+
+# Tap Get Started to complete onboarding
+- tapOn: 'Get Started'

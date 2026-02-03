@@ -104,6 +104,7 @@ export function CreateTaskForm({
           <FormInput
             control={control}
             name="title"
+            testID="task-title-input"
             rules={{ required: 'Title is required' }}
             inputProps={{
               placeholder: 'What needs to be done?',
@@ -125,6 +126,7 @@ export function CreateTaskForm({
                 placeholder="Add details..."
                 multiline
                 numberOfLines={3}
+                testID="task-description-input"
                 className="bg-muted/50 border border-border rounded-lg px-3 py-2 text-foreground min-h-[80px]"
               />
             )}
@@ -137,6 +139,7 @@ export function CreateTaskForm({
             {PRIORITIES.map((p) => (
               <Pressable
                 key={p.value}
+                testID={`task-priority-${p.value}`}
                 onPress={() => setValue('priority', p.value, { shouldDirty: true })}
                 className={cn(
                   'flex-1 py-2 rounded-lg border-2 items-center',
@@ -166,8 +169,9 @@ export function CreateTaskForm({
               onSubmitEditing={handleAddTag}
               className="flex-1"
               returnKeyType="done"
+              testID="task-tag-input"
             />
-            <Button variant="outline" size="sm" onPress={handleAddTag}>
+            <Button variant="outline" size="sm" onPress={handleAddTag} testID="task-addtag-button">
               Add
             </Button>
           </View>
@@ -195,7 +199,12 @@ export function CreateTaskForm({
 
         <View className="flex-row gap-3 mt-2">
           {onCancel && (
-            <Button variant="outline" onPress={onCancel} className="flex-1">
+            <Button
+              variant="outline"
+              onPress={onCancel}
+              className="flex-1"
+              testID="task-cancel-button"
+            >
               Cancel
             </Button>
           )}
@@ -205,6 +214,7 @@ export function CreateTaskForm({
             isLoading={isLoading || isSubmitting}
             disabled={isLoading || isSubmitting}
             className="flex-1"
+            testID="task-create-button"
           >
             Create Task
           </Button>

@@ -14,10 +14,15 @@ export default function SignUpScreen() {
   const [authError, setAuthError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  const handleEmailSignUp = async (email: string, password: string, displayName?: string) => {
+  const handleEmailSignUp = async (
+    email: string,
+    password: string,
+    displayName?: string,
+    confirmPassword?: string,
+  ) => {
     setAuthError(null)
     try {
-      await signUp({ email, password, displayName })
+      await signUp({ email, password, confirmPassword: confirmPassword ?? '', displayName })
       setSuccess(true)
     } catch (err) {
       setAuthError(err instanceof Error ? err.message : 'Sign up failed')

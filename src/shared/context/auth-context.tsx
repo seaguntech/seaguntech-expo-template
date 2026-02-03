@@ -164,9 +164,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
             data: {
               display_name: validated.displayName,
             },
+            emailRedirectTo: getValidatedRedirectUrl('auth/callback'),
           },
         })
         if (error) throw error
+        setState((prev) => ({ ...prev, isLoading: false }))
       } catch (error) {
         setState((prev) => ({
           ...prev,

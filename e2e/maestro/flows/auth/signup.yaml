@@ -1,0 +1,77 @@
+appId: com.app.seaguntechexpotemplate
+name: Authentication - Sign Up Flow
+tags:
+  - auth
+  - critical
+  - onboarding
+
+env:
+  RANDOM_SUFFIX: ${random.number(10000, 99999)}
+
+---
+# Test sign up flow - creates a new account
+- launchApp:
+    clearState: true
+
+# Wait for app to fully initialize
+- extendedWaitUntil:
+    visible: '.*'
+    timeout: 10000
+
+# Tap on Create Account to go to signup screen
+- tapOn: 'Create Account'
+
+# Wait for signup form to appear
+- extendedWaitUntil:
+    visible: 'Email'
+    timeout: 10000
+
+# Fill registration form
+# Display name
+- tapOn: 'John Doe'
+- inputText: 'E2E Test User'
+
+# Email - use random number for unique email
+- tapOn: 'email@example.com'
+- inputText: 'e2e.test.${RANDOM_SUFFIX}@mailinator.com'
+
+# Password
+- tapOn:
+    text: '••••••••'
+    index: 0
+- inputText: 'TestPassword123!'
+
+# Confirm Password
+- tapOn:
+    text: '••••••••'
+    index: 1
+- inputText: 'TestPassword123!'
+
+# Hide keyboard before tapping submit
+- hideKeyboard
+
+# Scroll to make sure button is visible
+- scroll
+
+# Submit registration
+- tapOn: 'Create Account'
+
+# Wait longer for API response
+- extendedWaitUntil:
+    visible: '.*'
+    timeout: 30000
+
+# Check for success or error message
+# If we see Home, test passed
+# If we see error message, capture it for debugging
+- runFlow:
+    when:
+      visible: 'Get Started'
+    file: ../onboarding/complete-onboarding.yaml
+
+# Try to verify home screen (may fail if email verification required)
+- extendedWaitUntil:
+    visible: 'Home'
+    timeout: 15000
+
+- assertVisible: 'Home'

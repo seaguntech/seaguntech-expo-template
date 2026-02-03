@@ -1,0 +1,80 @@
+appId: com.app.seaguntechexpotemplate
+name: Navigation - Tab Switching
+tags:
+  - navigation
+  - smoke
+
+---
+- launchApp:
+    clearState: true
+
+# Login first
+- runFlow: ../auth/login.yaml
+
+# Verify Home tab is visible
+- extendedWaitUntil:
+    visible:
+      id: 'tab-home'
+    timeout: 10000
+
+# Navigate to Tasks tab
+- tapOn:
+    id: 'tab-tasks'
+- extendedWaitUntil:
+    visible:
+      id: 'tasks-screen'
+    timeout: 5000
+
+# Navigate to AI tab
+- tapOn:
+    id: 'tab-ai'
+- extendedWaitUntil:
+    visible:
+      id: 'ai-screen'
+    timeout: 5000
+
+# Navigate to Premium tab
+- tapOn:
+    id: 'tab-premium'
+- extendedWaitUntil:
+    visible:
+      id: 'premium-screen'
+    timeout: 5000
+
+# Navigate to Profile tab
+- tapOn:
+    id: 'tab-profile'
+- extendedWaitUntil:
+    visible:
+      id: 'profile-screen'
+    timeout: 5000
+
+# Navigate back to Home
+- tapOn:
+    id: 'tab-home'
+- extendedWaitUntil:
+    visible:
+      id: 'home-screen'
+    timeout: 5000
+
+# Quick navigation test - tap through all tabs rapidly
+- tapOn:
+    id: 'tab-tasks'
+- tapOn:
+    id: 'tab-ai'
+- tapOn:
+    id: 'tab-premium'
+- tapOn:
+    id: 'tab-profile'
+- tapOn:
+    id: 'tab-home'
+
+# Wait for animation to complete
+- extendedWaitUntil:
+    visible:
+      id: 'home-screen'
+    timeout: 5000
+
+# Verify we ended up on Home
+- assertVisible:
+    id: 'home-screen'
