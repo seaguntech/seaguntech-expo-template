@@ -187,6 +187,7 @@ describe('AuthContext', () => {
           data: {
             display_name: 'New User',
           },
+          emailRedirectTo: 'seaguntechexpotemplate://auth/callback',
         },
       })
     })
