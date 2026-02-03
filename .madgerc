@@ -1,0 +1,13 @@
+{
+  "fileExtensions": ["ts", "tsx", "js", "jsx"],
+  "tsConfig": "./tsconfig.json",
+  "includeNpm": false,
+  "excludeRegExp": [
+    "node_modules",
+    "__tests__",
+    "__mocks__",
+    ".test.(ts|tsx)$",
+    ".spec.(ts|tsx)$"
+  ],
+  "warning": false
+}
