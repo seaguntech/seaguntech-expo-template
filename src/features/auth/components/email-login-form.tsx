@@ -140,6 +140,7 @@ export function EmailLoginForm({
           autoComplete: 'password',
           returnKeyType: mode === 'sign-up' ? 'next' : 'done',
           onSubmitEditing: mode === 'sign-in' ? submit : undefined,
+          textContentType: 'oneTimeCode',
         }}
       />
 
@@ -160,6 +161,7 @@ export function EmailLoginForm({
             autoComplete: 'password',
             returnKeyType: 'done',
             onSubmitEditing: submit,
+            textContentType: 'oneTimeCode',
           }}
         />
       )}
