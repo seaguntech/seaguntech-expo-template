@@ -1,6 +1,7 @@
 import { cn } from '@/shared/lib/utils'
 import { Text, TextInput, View } from '@/tw'
 import React, { useState } from 'react'
+import { TextInputIOSProps, TextInputProps } from 'react-native'
 
 export interface InputProps {
   label?: string
@@ -14,10 +15,10 @@ export interface InputProps {
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
   secureTextEntry?: boolean
-  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters'
-  keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad'
-  autoComplete?: 'email' | 'password' | 'name' | 'username' | 'off'
-  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
+  autoCapitalize?: TextInputProps['autoCapitalize']
+  keyboardType?: TextInputProps['keyboardType']
+  autoComplete?: TextInputProps['autoComplete']
+  returnKeyType?: TextInputProps['returnKeyType']
   blurOnSubmit?: boolean
   editable?: boolean
   multiline?: boolean
@@ -25,6 +26,7 @@ export interface InputProps {
   className?: string
   inputClassName?: string
   testID?: string
+  textContentType?: TextInputIOSProps['textContentType']
 }
 
 export function Input({
@@ -50,6 +52,7 @@ export function Input({
   className,
   inputClassName,
   testID,
+  textContentType,
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false)
 
@@ -92,6 +95,7 @@ export function Input({
           numberOfLines={numberOfLines}
           textAlignVertical={multiline ? 'top' : 'center'}
           testID={testID}
+          textContentType={textContentType}
         />
         {rightIcon && <View className="ml-2">{rightIcon}</View>}
       </View>

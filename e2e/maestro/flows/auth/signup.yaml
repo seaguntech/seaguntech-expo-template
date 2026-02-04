@@ -1,25 +1,20 @@
 appId: com.app.seaguntechexpotemplate
-name: Authentication - Sign Up Flow
+name: Authentication - Sign Up Flow with Email Verification
 tags:
   - auth
   - critical
-  - onboarding
-
-env:
-  RANDOM_SUFFIX: ${random.number(10000, 99999)}
 
 ---
-# Test sign up flow - creates a new account
-# Note: This test may fail if Supabase requires email verification
-# In that case, disable email verification in Supabase dashboard for testing
+# Test sign up flow with email verification
+# Flow: Sign Up Form → Email Confirmation Screen → Back to Sign In
 
 - launchApp:
     clearState: true
 
-# Wait for app to fully initialize
+# Wait for app to fully initialize - look for Welcome screen
 - extendedWaitUntil:
-    visible: '.*'
-    timeout: 10000
+    visible: 'Seaguntech'
+    timeout: 15000
 
 # Tap on Create Account to go to signup screen
 - tapOn: 'Create Account'
@@ -29,25 +24,29 @@ env:
     visible: 'Email'
     timeout: 10000
 
-# Fill registration form
+# Fill registration form using testIDs for reliable selection
 # Display name
-- tapOn: 'John Doe'
+- tapOn:
+    id: 'auth-displayname-input'
 - inputText: 'E2E Test User'
 
-# Email - use random number for unique email
-- tapOn: 'email@example.com'
-- inputText: 'e2e.test.${RANDOM_SUFFIX}@mailinator.com'
+# Email - use random email for unique signup
+- tapOn:
+    id: 'auth-email-input'
+- inputRandomEmail
 
 # Password
 - tapOn:
-    text: '••••••••'
-    index: 0
+    id: 'auth-password-input'
 - inputText: 'TestPassword123!'
 
-# Confirm Password
+# Hide keyboard and scroll to make confirm password visible
+- hideKeyboard
+- scroll
+
+# Confirm Password - tap and input
 - tapOn:
-    text: '••••••••'
-    index: 1
+    id: 'auth-confirmpassword-input'
 - inputText: 'TestPassword123!'
 
 # Hide keyboard before tapping submit
@@ -59,21 +58,25 @@ env:
 # Submit registration
 - tapOn: 'Create Account'
 
-# Wait longer for API response
+# === Email Confirmation Screen ===
+# Wait for email confirmation screen to appear
 - extendedWaitUntil:
-    visible: '.*'
+    visible: 'Check your email'
     timeout: 30000
 
-# Check for onboarding screen (Welcome to Seaguntech)
-# Fixed: Changed from 'Get Started' to 'Welcome to Seaguntech'
-- runFlow:
-    when:
-      visible: 'Welcome to Seaguntech'
-    file: ../onboarding/complete-onboarding.yaml
+# Verify email confirmation UI elements
+- assertVisible: 'Check your email'
+- assertVisible: 'verify your account'
+- assertVisible: 'Back to Sign In'
 
-# Try to verify home screen (may fail if email verification required)
+# Navigate back to sign in
+- tapOn: 'Back to Sign In'
+
+# === Sign In Screen ===
+# Verify we're on the sign in screen
 - extendedWaitUntil:
-    visible: 'Home'
-    timeout: 15000
+    visible: 'Sign In'
+    timeout: 10000
 
-- assertVisible: 'Home'
+# Verify sign in form is displayed (placeholders visible = empty fields)
+- assertVisible: 'email@example.com'
