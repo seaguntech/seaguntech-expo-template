@@ -52,6 +52,7 @@ export interface AuthContextValue extends AuthState {
   resetPassword: (credentials: ResetPasswordCredentials) => Promise<void>
   updatePassword: (credentials: UpdatePasswordCredentials) => Promise<void>
   refreshSession: () => Promise<void>
+  clearError: () => void
 }
 
 export type AuthScreen = 'welcome' | 'sign-in' | 'sign-up' | 'reset-password'

@@ -3,16 +3,23 @@ import { useAuth } from '@/shared/context'
 import { LayoutWrapper } from '@/shared/ui/layout'
 import { BackButton } from '@/src/shared/ui/primitives'
 import { Text, View } from '@/tw'
-import { useRouter } from 'expo-router'
-import React, { useState } from 'react'
+import { useFocusEffect, useRouter } from 'expo-router'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export default function SignUpScreen() {
   const router = useRouter()
   const { t } = useTranslation()
-  const { signUp, signInWithOAuth, isLoading, error } = useAuth()
+  const { signUp, signInWithOAuth, isLoading, error, clearError } = useAuth()
   const [authError, setAuthError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+
+  useFocusEffect(
+    useCallback(() => {
+      clearError()
+      setAuthError(null)
+    }, [clearError]),
+  )
 
   const handleEmailSignUp = async (
     email: string,

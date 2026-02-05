@@ -154,15 +154,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async (credentials: SignUpCredentials) => {
       // Validate input with password confirmation
       const validated = signUpSchema.parse(credentials)
+      const { email, password, displayName } = validated
 
       setState((prev) => ({ ...prev, isLoading: true, error: null }))
       try {
         const { error } = await supabase.auth.signUp({
-          email: validated.email,
-          password: validated.password,
+          email,
+          password,
           options: {
             data: {
-              display_name: validated.displayName,
+              display_name: displayName,
             },
             emailRedirectTo: getValidatedRedirectUrl('auth/callback'),
           },
@@ -291,6 +292,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [])
 
+  const clearError = useCallback(() => {
+    setState((prev) => ({ ...prev, error: null }))
+  }, [])
+
   const value = useMemo<AuthContextValue>(
     () => ({
       ...state,
@@ -301,6 +306,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       resetPassword,
       updatePassword,
       refreshSession,
+      clearError,
     }),
     [
       state,
@@ -311,6 +317,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       resetPassword,
       updatePassword,
       refreshSession,
+      clearError,
     ],
   )
 

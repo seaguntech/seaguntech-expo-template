@@ -34,7 +34,8 @@
     "circular:check": "madge --circular --extensions ts,tsx app src",
     "circular:check:app": "madge --circular --extensions ts,tsx app",
     "circular:check:src": "madge --circular --extensions ts,tsx src",
-    "circular:graph": "madge --extensions ts,tsx --image dependency-graph.svg src"
+    "circular:graph": "madge --extensions ts,tsx --image dependency-graph.svg src",
+    "build:email-templates": "tsx supabase/scripts/build-email-templates.ts"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

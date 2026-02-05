@@ -13,6 +13,7 @@ Development:
 
 Native build:
 
+- `pnpm prebuild`
 - `npx expo prebuild --clean`
 - `npx expo run:ios`
 - `npx expo run:android`
@@ -21,6 +22,7 @@ Quality:
 
 - `pnpm lint`
 - `pnpm lint:fix`
+- `pnpm lint:check`
 - `pnpm check-types`
 - `pnpm format`
 - `pnpm format:check`
@@ -29,6 +31,7 @@ Tests:
 
 - `pnpm test`
 - `pnpm test:watch`
+- `pnpm test:coverage`
 - `pnpm test -- path/to/file.test.tsx` (single test file)
 
 Supabase:
@@ -36,6 +39,28 @@ Supabase:
 - `supabase start`
 - `supabase db push`
 - `supabase functions serve`
+- `pnpm supabase:migrate`
+- `pnpm supabase:migrate:local`
+- `pnpm supabase:reset`
+- `pnpm supabase:seed`
+- `pnpm supabase:setup`
+- `pnpm supabase:types`
+
+E2E (Maestro):
+
+- `pnpm e2e:install`
+- `pnpm e2e:test`
+- `pnpm e2e:test:smoke`
+- `pnpm e2e:test:ci`
+- `pnpm e2e:test:auth`
+- `pnpm e2e:record`
+
+Dependency checks:
+
+- `pnpm circular:check`
+- `pnpm circular:check:app`
+- `pnpm circular:check:src`
+- `pnpm circular:graph`
 
 ## Project Structure
 
