@@ -1,5 +1,7 @@
 import type { Session } from '@supabase/supabase-js'
 
+export type AuthSession = Session
+
 export interface User {
   id: string
   email: string
@@ -13,6 +15,7 @@ export interface User {
 export interface AuthState {
   user: User | null
   session: Session | null
+  isInitializing: boolean
   isLoading: boolean
   isAuthenticated: boolean
   error: string | null
@@ -55,4 +58,11 @@ export interface AuthContextValue extends AuthState {
   clearError: () => void
 }
 
-export type AuthScreen = 'welcome' | 'sign-in' | 'sign-up' | 'reset-password'
+export type AuthScreen =
+  | 'welcome'
+  | 'sign-in'
+  | 'sign-up'
+  | 'callback'
+  | 'confirm'
+  | 'reset-password'
+  | 'set-password'

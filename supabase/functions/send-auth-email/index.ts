@@ -1,5 +1,5 @@
-import { Webhook } from 'https://esm.sh/standardwebhooks@1.0.0'
 import { Resend } from 'https://esm.sh/resend@4.0.0'
+import { Webhook } from 'https://esm.sh/standardwebhooks@1.0.0'
 import { templates } from './templates.generated.ts'
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY')!)
@@ -27,7 +27,7 @@ interface EmailPayload {
   email_data: {
     token: string
     token_hash: string
-    redirect_to: string
+    redirect_to?: string
     email_action_type: 'signup' | 'recovery' | 'invite' | 'magiclink' | 'email_change'
     site_url: string
     token_new?: string
@@ -49,15 +49,17 @@ function buildConfirmationUrl(
   type: string,
   redirectTo?: string,
 ): string {
-  // Use Supabase Auth verify endpoint - it will verify token and redirect to app
-  const supabaseUrl = Deno.env.get('SUPABASE_URL') || siteUrl
-  const url = new URL(`${supabaseUrl}/auth/v1/verify`)
-  url.searchParams.set('token', tokenHash)
-  url.searchParams.set('type', type)
-  if (redirectTo) {
-    url.searchParams.set('redirect_to', redirectTo)
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')
+  if (!supabaseUrl?.startsWith('http://') && !supabaseUrl?.startsWith('https://')) {
+    throw new Error('Cannot build confirmation URL: missing valid SUPABASE_URL')
   }
-  return url.toString()
+
+  // Keep an https verification link for email clients (Gmail web can strip custom schemes).
+  const verifyUrl = new URL(`${supabaseUrl}/auth/v1/verify`)
+  verifyUrl.searchParams.set('token', tokenHash)
+  verifyUrl.searchParams.set('type', type)
+  verifyUrl.searchParams.set('redirect_to', redirectTo ?? siteUrl)
+  return verifyUrl.toString()
 }
 
 Deno.serve(async (req) => {
@@ -144,7 +146,6 @@ Deno.serve(async (req) => {
         break
       }
       default:
-        console.error(`Unknown email action type: ${email_action_type}`)
         return new Response(
           JSON.stringify({ error: { message: `Unknown email action type: ${email_action_type}` } }),
           { status: 400, headers: { 'Content-Type': 'application/json' } },
@@ -160,21 +161,17 @@ Deno.serve(async (req) => {
     })
 
     if (resendError) {
-      console.error('Resend error:', resendError)
       return new Response(JSON.stringify({ error: { message: resendError.message } }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       })
     }
 
-    console.log(`Email sent successfully to ${user.email} for action: ${email_action_type}`)
-
     return new Response(JSON.stringify({}), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
   } catch (error) {
-    console.error('Hook error:', error)
     return new Response(
       JSON.stringify({
         error: {

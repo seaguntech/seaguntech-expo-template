@@ -10,15 +10,15 @@ import { useTranslation } from 'react-i18next'
 export default function SignUpScreen() {
   const router = useRouter()
   const { t } = useTranslation()
-  const { signUp, signInWithOAuth, isLoading, error, clearError } = useAuth()
+  const { signUp, signInWithOAuth } = useAuth()
   const [authError, setAuthError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const [isOAuthLoading, setIsOAuthLoading] = useState(false)
 
   useFocusEffect(
     useCallback(() => {
-      clearError()
       setAuthError(null)
-    }, [clearError]),
+    }, []),
   )
 
   const handleEmailSignUp = async (
@@ -38,19 +38,25 @@ export default function SignUpScreen() {
 
   const handleGoogleSignIn = async () => {
     setAuthError(null)
+    setIsOAuthLoading(true)
     try {
       await signInWithOAuth({ provider: 'google' })
     } catch (err) {
       setAuthError(err instanceof Error ? err.message : 'Google sign in failed')
+    } finally {
+      setIsOAuthLoading(false)
     }
   }
 
   const handleAppleSignIn = async () => {
     setAuthError(null)
+    setIsOAuthLoading(true)
     try {
       await signInWithOAuth({ provider: 'apple' })
     } catch (err) {
       setAuthError(err instanceof Error ? err.message : 'Apple sign in failed')
+    } finally {
+      setIsOAuthLoading(false)
     }
   }
 
@@ -87,7 +93,7 @@ export default function SignUpScreen() {
       <SocialLoginButtons
         onGooglePress={handleGoogleSignIn}
         onApplePress={handleAppleSignIn}
-        isLoading={isLoading}
+        isLoading={isOAuthLoading}
       />
 
       <Separator />
@@ -95,8 +101,8 @@ export default function SignUpScreen() {
       <EmailLoginForm
         mode="sign-up"
         onSubmit={handleEmailSignUp}
-        isLoading={isLoading}
-        error={authError || error}
+        isLoading={isOAuthLoading}
+        error={authError}
       />
 
       <Text className="text-xs text-muted-foreground text-center mt-4">

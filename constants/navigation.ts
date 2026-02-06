@@ -6,7 +6,10 @@ export const ROUTES = {
     WELCOME: '/(auth)/welcome',
     SIGN_IN: '/(auth)/sign-in',
     SIGN_UP: '/(auth)/sign-up',
+    CALLBACK: '/(auth)/callback',
+    CONFIRM: '/(auth)/confirm',
     RESET_PASSWORD: '/(auth)/reset-password',
+    SET_PASSWORD: '/(auth)/set-password',
   },
   // Protected routes
   PROTECTED: {
@@ -67,7 +70,10 @@ export const NAVIGATION_CONFIG = {
         welcome: 'welcome',
         'sign-in': 'sign-in',
         'sign-up': 'sign-up',
+        callback: 'callback',
+        confirm: 'confirm',
         'reset-password': 'reset-password',
+        'set-password': 'set-password',
       },
     },
     '(protected)': {

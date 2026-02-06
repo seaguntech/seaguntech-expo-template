@@ -16,7 +16,7 @@ type ResetPasswordValues = {
 export default function ResetPasswordScreen() {
   const router = useRouter()
   const { t } = useTranslation()
-  const { resetPassword, isLoading } = useAuth()
+  const { resetPassword } = useAuth()
   const [success, setSuccess] = useState(false)
 
   const emailRequired = t('auth.emailRequired') || 'Email is required'
@@ -113,8 +113,8 @@ export default function ResetPasswordScreen() {
           variant="primary"
           size="lg"
           onPress={submit}
-          isLoading={isLoading || isSubmitting}
-          disabled={isLoading || isSubmitting}
+          isLoading={isSubmitting}
+          disabled={isSubmitting}
         >
           Send Reset Link
         </Button>

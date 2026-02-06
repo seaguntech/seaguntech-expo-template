@@ -6,11 +6,11 @@ import { useEffect } from 'react'
 
 export default function IndexScreen() {
   const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isInitializing } = useAuth()
   const onboardingCompleted = useOnboardingStore((state) => state.isCompleted)
 
   useEffect(() => {
-    if (isLoading) return
+    if (isInitializing) return
 
     // Determine where to redirect
     if (!isAuthenticated) {
@@ -23,7 +23,7 @@ export default function IndexScreen() {
       // Logged in and onboarding done -> go to main app
       router.replace('/(protected)/(tabs)')
     }
-  }, [router, isAuthenticated, isLoading, onboardingCompleted])
+  }, [router, isAuthenticated, isInitializing, onboardingCompleted])
 
   // Show loading screen while checking auth
   return (

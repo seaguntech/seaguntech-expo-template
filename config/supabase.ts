@@ -73,7 +73,7 @@ export const signOut = async () => {
 
 export const resetPassword = async (email: string) => {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: 'seaguntechexpotemplate://reset-password',
+    redirectTo: 'seaguntechexpotemplate://callback',
   })
   if (error) throw error
 }

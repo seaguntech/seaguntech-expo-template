@@ -6,11 +6,11 @@ import { useEffect } from 'react'
 
 export default function ProtectedLayout() {
   const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isInitializing } = useAuth()
   const { isCompleted: onboardingCompleted } = useOnboardingStore()
 
   useEffect(() => {
-    if (isLoading) return
+    if (isInitializing) return
 
     // If not authenticated, redirect to auth
     if (!isAuthenticated) {
@@ -23,10 +23,10 @@ export default function ProtectedLayout() {
       router.replace('/onboarding')
       return
     }
-  }, [router, isAuthenticated, isLoading, onboardingCompleted])
+  }, [router, isAuthenticated, isInitializing, onboardingCompleted])
 
   // Show loading while checking auth
-  if (isLoading) {
+  if (isInitializing) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
         <ActivityIndicator size="large" />

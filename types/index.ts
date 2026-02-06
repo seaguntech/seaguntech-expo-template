@@ -1,6 +1,7 @@
 // Auth types
 export type {
   User,
+  AuthSession,
   AuthState,
   SignInCredentials,
   SignUpCredentials,

@@ -1,16 +1,20 @@
-import { queryKeys } from '@/shared/lib/query-client'
-import type { CreateTaskDto, Task, TaskFilter, UpdateTaskDto } from '@/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useState } from 'react'
+import { useAuth } from '@/shared/context'
+import { queryKeys } from '@/shared/lib/query-client'
+import type { CreateTaskDto, Task, TaskFilter, UpdateTaskDto } from '@/types'
 import { tasksApi } from '../api/tasks-api'
 
 export function useTasks(initialFilter: TaskFilter = {}) {
+  const { user, isAuthenticated } = useAuth()
   const queryClient = useQueryClient()
   const [filter, setFilter] = useState<TaskFilter>(initialFilter)
+  const tasksListQueryKey = queryKeys.tasks.list(user?.id ?? null, filter)
 
   const tasksQuery = useQuery({
-    queryKey: queryKeys.tasks.list(filter),
+    queryKey: tasksListQueryKey,
     queryFn: () => tasksApi.getTasks(filter),
+    enabled: isAuthenticated && !!user?.id,
   })
 
   const createMutation = useMutation({

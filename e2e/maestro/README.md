@@ -61,6 +61,8 @@ maestro test e2e/maestro/config/test-suites.yaml --suite smoke
 
 - `login.yaml` - Test login flow with valid credentials
 - `signup.yaml` - Test user registration flow
+- `callback-set-password.yaml` - Test recovery callback deep link routes to set password screen
+- `callback-verify-link-set-password.yaml` - Test Supabase `/auth/v1/verify` deep link routes to set password screen
 
 ### Core Features (`features/`)
 
@@ -97,9 +99,12 @@ All interactive components use testID attributes following this naming conventio
 - `auth-email-input` - Email input field
 - `auth-password-input` - Password input field
 - `auth-confirmpassword-input` - Confirm password field
+- `auth-newpassword-input` - New password field in reset flow
+- `auth-reset-confirmpassword-input` - Confirm new password field in reset flow
 - `auth-displayname-input` - Display name field
 - `auth-signin-button` - Sign in button
 - `auth-signup-button` - Sign up button
+- `auth-updatepassword-button` - Update password button
 - `auth-google-button` - Google OAuth button
 - `auth-apple-button` - Apple OAuth button
 

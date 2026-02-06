@@ -12,8 +12,12 @@ const mockUpdateUser = jest.fn()
 const mockGetSession = jest.fn()
 const mockRefreshSession = jest.fn()
 const mockOnAuthStateChange = jest.fn()
+const mockQueryClientCancelQueries = jest.fn()
+const mockQueryClientClear = jest.fn()
 const mockHydrate = jest.fn()
 const mockClearProfile = jest.fn()
+let authStateChangeHandler: ((event: string, session: unknown) => Promise<void> | void) | null =
+  null
 
 jest.mock('@/config/supabase', () => ({
   supabase: {
@@ -27,8 +31,16 @@ jest.mock('@/config/supabase', () => ({
         mockResetPasswordForEmail(email, options),
       updateUser: (data: unknown) => mockUpdateUser(data),
       refreshSession: () => mockRefreshSession(),
-      onAuthStateChange: () => mockOnAuthStateChange(),
+      onAuthStateChange: (callback: (event: string, session: unknown) => Promise<void> | void) =>
+        mockOnAuthStateChange(callback),
     },
+  },
+}))
+
+jest.mock('@/shared/lib/query-client', () => ({
+  queryClient: {
+    cancelQueries: () => mockQueryClientCancelQueries(),
+    clear: () => mockQueryClientClear(),
   },
 }))
 
@@ -50,9 +62,14 @@ const wrapper = ({ children }: { children: ReactNode }) => <AuthProvider>{childr
 describe('AuthContext', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    authStateChangeHandler = null
     mockGetSession.mockResolvedValue({ data: { session: null } })
-    mockOnAuthStateChange.mockReturnValue({
-      data: { subscription: { unsubscribe: jest.fn() } },
+    mockQueryClientCancelQueries.mockResolvedValue(undefined)
+    mockOnAuthStateChange.mockImplementation((callback) => {
+      authStateChangeHandler = callback
+      return {
+        data: { subscription: { unsubscribe: jest.fn() } },
+      }
     })
   })
 
@@ -61,9 +78,12 @@ describe('AuthContext', () => {
       mockGetSession.mockResolvedValue({ data: { session: null } })
       const { result } = renderHook(() => useAuth(), { wrapper })
 
+      expect(result.current.isInitializing).toBe(true)
+
       await waitFor(
         () => {
           expect(result.current.isLoading).toBe(false)
+          expect(result.current.isInitializing).toBe(false)
         },
         { timeout: 10000 },
       )
@@ -93,6 +113,7 @@ describe('AuthContext', () => {
       await waitFor(
         () => {
           expect(result.current.isLoading).toBe(false)
+          expect(result.current.isInitializing).toBe(false)
         },
         { timeout: 10000 },
       )
@@ -187,7 +208,7 @@ describe('AuthContext', () => {
           data: {
             display_name: 'New User',
           },
-          emailRedirectTo: 'seaguntechexpotemplate://auth/callback',
+          emailRedirectTo: 'seaguntechexpotemplate://callback',
         },
       })
     })
@@ -245,6 +266,84 @@ describe('AuthContext', () => {
 
       expect(mockSignOut).toHaveBeenCalled()
     })
+
+    it('clears query cache on sign out', async () => {
+      mockSignOut.mockResolvedValue({ error: null })
+
+      const { result } = renderHook(() => useAuth(), { wrapper })
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+
+      await act(async () => {
+        await result.current.signOut()
+      })
+
+      expect(mockQueryClientCancelQueries).toHaveBeenCalled()
+      expect(mockQueryClientClear).toHaveBeenCalled()
+    })
+  })
+
+  describe('auth state change', () => {
+    it('clears query cache when authenticated user changes', async () => {
+      const firstUser = {
+        id: 'user-1',
+        email: 'first@example.com',
+        created_at: '2024-01-01',
+        user_metadata: {},
+      }
+
+      const secondUser = {
+        id: 'user-2',
+        email: 'second@example.com',
+        created_at: '2024-01-01',
+        user_metadata: {},
+      }
+
+      mockGetSession.mockResolvedValue({
+        data: { session: { user: firstUser } },
+      })
+
+      const { result } = renderHook(() => useAuth(), { wrapper })
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+
+      await act(async () => {
+        await authStateChangeHandler?.('SIGNED_IN', { user: secondUser })
+      })
+
+      expect(mockQueryClientCancelQueries).toHaveBeenCalledTimes(1)
+      expect(mockQueryClientClear).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not clear query cache when auth event keeps same user', async () => {
+      const firstUser = {
+        id: 'user-1',
+        email: 'first@example.com',
+        created_at: '2024-01-01',
+        user_metadata: {},
+      }
+
+      mockGetSession.mockResolvedValue({
+        data: { session: { user: firstUser } },
+      })
+
+      const { result } = renderHook(() => useAuth(), { wrapper })
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+
+      await act(async () => {
+        await authStateChangeHandler?.('TOKEN_REFRESHED', { user: firstUser })
+      })
+
+      expect(mockQueryClientCancelQueries).not.toHaveBeenCalled()
+      expect(mockQueryClientClear).not.toHaveBeenCalled()
+    })
   })
 
   describe('resetPassword', () => {
@@ -262,7 +361,7 @@ describe('AuthContext', () => {
       })
 
       expect(mockResetPasswordForEmail).toHaveBeenCalledWith('test@example.com', {
-        redirectTo: 'seaguntechexpotemplate://reset-password',
+        redirectTo: 'seaguntechexpotemplate://callback',
       })
     })
 

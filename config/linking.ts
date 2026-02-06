@@ -56,7 +56,10 @@ export const DeepLinks = {
   welcome: () => buildDeepLink('welcome'),
   signIn: () => buildDeepLink('sign-in'),
   signUp: () => buildDeepLink('sign-up'),
+  authCallback: () => buildDeepLink('callback'),
+  authConfirm: () => buildDeepLink('confirm'),
   resetPassword: (token?: string) => buildDeepLink('reset-password', token ? { token } : undefined),
+  setPassword: () => buildDeepLink('set-password'),
 
   // Protected
   home: () => buildDeepLink(''),

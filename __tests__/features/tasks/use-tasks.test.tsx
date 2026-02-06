@@ -12,6 +12,7 @@ const mockCreateTask = jest.fn()
 const mockUpdateTask = jest.fn()
 const mockDeleteTask = jest.fn()
 const mockReorderTasks = jest.fn()
+const mockUseAuth = jest.fn()
 
 jest.mock('@/features/tasks/api/tasks-api', () => ({
   tasksApi: {
@@ -21,6 +22,10 @@ jest.mock('@/features/tasks/api/tasks-api', () => ({
     deleteTask: (id: string) => mockDeleteTask(id),
     reorderTasks: (taskIds: string[]) => mockReorderTasks(taskIds),
   },
+}))
+
+jest.mock('@/shared/context', () => ({
+  useAuth: () => mockUseAuth(),
 }))
 
 const createTestTask = (overrides: Partial<Task> = {}): Task => ({
@@ -80,6 +85,10 @@ describe('useTasks', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockUseAuth.mockReturnValue({
+      isAuthenticated: true,
+      user: { id: 'user-1' },
+    })
   })
 
   describe('fetching tasks', () => {

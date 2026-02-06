@@ -10,6 +10,8 @@ smoke:
 auth:
   - flows/auth/login.yaml
   - flows/auth/signup.yaml
+  - flows/auth/callback-set-password.yaml
+  - flows/auth/callback-verify-link-set-password.yaml
 
 # Feature tests
 features:
@@ -19,6 +21,8 @@ features:
 regression:
   - flows/auth/login.yaml
   - flows/auth/signup.yaml
+  - flows/auth/callback-set-password.yaml
+  - flows/auth/callback-verify-link-set-password.yaml
   - flows/onboarding/complete-onboarding.yaml
   - flows/navigation/tab-navigation.yaml
   - flows/features/tasks.yaml
@@ -26,6 +30,8 @@ regression:
 # CI/CD suite (runs on pull requests)
 ci:
   - flows/auth/login.yaml
+  - flows/auth/callback-set-password.yaml
+  - flows/auth/callback-verify-link-set-password.yaml
   - flows/navigation/tab-navigation.yaml
 
 # Production sanity check

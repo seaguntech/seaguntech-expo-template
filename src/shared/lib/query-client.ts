@@ -1,6 +1,6 @@
-import { QueryClient, onlineManager } from '@tanstack/react-query'
-import NetInfo from '@react-native-community/netinfo'
 import type { TaskFilter } from '@/types'
+import NetInfo from '@react-native-community/netinfo'
+import { QueryClient, onlineManager } from '@tanstack/react-query'
 
 onlineManager.setEventListener((setOnline) => {
   return NetInfo.addEventListener((state) => {
@@ -40,23 +40,28 @@ export const queryKeys = {
   // Auth
   auth: {
     all: ['auth'] as const,
-    session: () => [...queryKeys.auth.all, 'session'] as const,
-    user: () => [...queryKeys.auth.all, 'user'] as const,
+    session: (userId?: string | null) =>
+      [...queryKeys.auth.all, 'session', userId ?? 'anonymous'] as const,
+    user: (userId?: string | null) =>
+      [...queryKeys.auth.all, 'user', userId ?? 'anonymous'] as const,
   },
 
   // Profile
   profile: {
     all: ['profile'] as const,
-    detail: () => [...queryKeys.profile.all, 'detail'] as const,
-    avatar: () => [...queryKeys.profile.all, 'avatar'] as const,
+    detail: (userId?: string | null) =>
+      [...queryKeys.profile.all, 'detail', userId ?? 'anonymous'] as const,
+    avatar: (userId?: string | null) =>
+      [...queryKeys.profile.all, 'avatar', userId ?? 'anonymous'] as const,
   },
 
   // Tasks
   tasks: {
     all: ['tasks'] as const,
-    list: (filters?: Record<string, unknown> | TaskFilter) =>
-      [...queryKeys.tasks.all, 'list', filters] as const,
-    detail: (id: string) => [...queryKeys.tasks.all, 'detail', id] as const,
+    list: (userId?: string | null, filters?: Record<string, unknown> | TaskFilter) =>
+      [...queryKeys.tasks.all, 'list', userId ?? 'anonymous', filters] as const,
+    detail: (userId: string | null | undefined, id: string) =>
+      [...queryKeys.tasks.all, 'detail', userId ?? 'anonymous', id] as const,
   },
 
   // Premium

@@ -9,9 +9,10 @@ export function useProfile() {
   const { user, isAuthenticated } = useAuth()
   const queryClient = useQueryClient()
   const profileStore = useProfileStore()
+  const profileQueryKey = queryKeys.profile.detail(user?.id ?? null)
 
   const profileQuery = useQuery({
-    queryKey: queryKeys.profile.detail(),
+    queryKey: profileQueryKey,
     queryFn: () => fetchProfile(user?.id ?? ''),
     enabled: isAuthenticated && !!user?.id,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -33,7 +34,7 @@ export function useProfile() {
   const updateProfileMutation = useMutation({
     mutationFn: (payload: ProfileUpdatePayload) => updateProfile(user?.id ?? '', payload),
     onSuccess: (updatedProfile) => {
-      queryClient.setQueryData(queryKeys.profile.detail(), updatedProfile)
+      queryClient.setQueryData(profileQueryKey, updatedProfile)
       // Update store
       profileStore.hydrate({
         displayName: updatedProfile.displayName,
@@ -46,7 +47,7 @@ export function useProfile() {
   const uploadAvatarMutation = useMutation({
     mutationFn: (uri: string) => uploadAvatar(user?.id ?? '', uri),
     onSuccess: (avatarUrl) => {
-      queryClient.setQueryData(queryKeys.profile.detail(), (old: Profile | undefined) =>
+      queryClient.setQueryData(profileQueryKey, (old: Profile | undefined) =>
         old ? { ...old, avatarUrl } : old,
       )
       profileStore.setAvatarUrl(avatarUrl)
@@ -56,7 +57,7 @@ export function useProfile() {
   const deleteAvatarMutation = useMutation({
     mutationFn: () => deleteAvatar(user?.id ?? ''),
     onSuccess: () => {
-      queryClient.setQueryData(queryKeys.profile.detail(), (old: Profile | undefined) =>
+      queryClient.setQueryData(profileQueryKey, (old: Profile | undefined) =>
         old ? { ...old, avatarUrl: null } : old,
       )
       profileStore.setAvatarUrl(null)
