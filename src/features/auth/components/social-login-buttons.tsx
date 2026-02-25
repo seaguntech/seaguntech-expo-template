@@ -1,4 +1,4 @@
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/lib/utils'
 import { View } from '@/tw'
 import React from 'react'
 import { AppleProviderButton } from './apple-provider-button'

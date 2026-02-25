@@ -1,4 +1,4 @@
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/lib/utils'
 import { Pressable, Text, TextInput, View } from '@/tw'
 import React, { useCallback, useState } from 'react'
 import { type NativeSyntheticEvent, type TextInputContentSizeChangeEventData } from 'react-native'

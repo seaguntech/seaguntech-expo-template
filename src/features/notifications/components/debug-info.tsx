@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/primitives'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/primitives'
 import { Pressable, Text, View } from '@/tw'
 import React from 'react'
 

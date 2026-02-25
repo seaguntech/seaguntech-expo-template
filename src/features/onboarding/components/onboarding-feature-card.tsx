@@ -1,4 +1,4 @@
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/lib/utils'
 import { Text, View } from '@/tw'
 import type { OnboardingFeature } from '@/types'
 import React from 'react'

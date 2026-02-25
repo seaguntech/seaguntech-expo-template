@@ -21,4 +21,4 @@ export type {
 } from './types'
 
 // Note: Auth context is in shared/context for app-wide access
-// Use: import { useAuth } from '@/shared/context'
+// Use: import { useAuth } from '@/context'

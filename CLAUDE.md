@@ -81,8 +81,8 @@ tw/                           # NativeWind CSS-wrapped components
 ```tsx
 // ✅ Correct
 import { TaskCard, useTasks } from '@/features/tasks'
-import { Button, Card } from '@/shared/ui'
-import { useAuth } from '@/shared/context'
+import { Button, Card } from '@/ui'
+import { useAuth } from '@/context'
 
 // ❌ Wrong - don't import internals
 import { tasksApi } from '@/features/tasks/api/tasks-api'
@@ -127,7 +127,7 @@ Components must be wrapped with `useCssElement` for className to work.
 
 1. **Server Data**: Supabase → React Query (features/\*/api) → Components
 2. **Client State**: MMKV → Zustand stores (features/\*/stores) → Components
-3. **Auth State**: Supabase Auth → `@/shared/context` → Session in MMKV
+3. **Auth State**: Supabase Auth → `@/context` → Session in MMKV
 
 ### Supabase Edge Functions
 
@@ -146,7 +146,7 @@ Feature types in `src/features/*/types.ts`. Shared types in `src/shared/types/`:
 ```tsx
 import type { Task, TaskStatus } from '@/features/tasks'
 import type { Profile } from '@/features/profile'
-import type { ApiResponse } from '@/shared/types'
+import type { ApiResponse } from '@/types'
 ```
 
 ### Storage Keys

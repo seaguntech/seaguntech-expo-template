@@ -48,11 +48,11 @@ Each feature is a self-contained module with its own components, hooks, API call
 ```
 features/tasks/
 ├── components/     # UI specific to tasks
-├── hooks/          # Business logic for tasks
-├── api/            # Data fetching for tasks
-├── stores/         # Local state for tasks
-├── types.ts        # Type definitions
-└── index.ts        # Public API (only exports)
+├── hooks/         # Business logic for tasks
+├── lib/           # Data fetching for tasks (API, services)
+├── store/         # Local state for tasks (Zustand)
+├── types.ts       # Type definitions
+└── index.ts       # Public API (only exports)
 ```
 
 ### 2. Explicit Public APIs
@@ -77,26 +77,33 @@ app/ (routes)
   ↓ imports from
 features/ (business modules)
   ↓ imports from
-shared/ (common utilities)
+components/, hooks/, lib/, store/, context/, types/
   ↓ imports from
-config/, constants/, tw/
+config/, constants/, tw/, locales/
 ```
 
 **Rules:**
 
-- `shared/` NEVER imports from `features/`
+- `components/`, `hooks/`, `lib/`, `store/`, `context/`, `types/` NEVER import from `features/`
 - `features/` NEVER imports from `app/`
 - Features can import from other features ONLY through their public API
 
 ### 4. Separation of Concerns
 
-| Layer        | Responsibility                         |
-| ------------ | -------------------------------------- |
-| `app/`       | Route definitions, layouts, navigation |
-| `features/`  | Business logic, feature-specific UI    |
-| `shared/`    | Reusable utilities, design system      |
-| `config/`    | Environment configuration              |
-| `constants/` | Static values                          |
+| Layer         | Responsibility                         |
+| ------------- | -------------------------------------- |
+| `app/`        | Route definitions, layouts, navigation |
+| `features/`   | Business logic, feature-specific UI    |
+| `components/` | Reusable UI components                 |
+| `hooks/`      | Shared hooks                           |
+| `lib/`        | Utility functions, storage, query      |
+| `store/`      | Global Zustand stores                  |
+| `context/`    | React Context providers                |
+| `types/`      | Shared type definitions                |
+| `config/`     | Environment configuration              |
+| `constants/`  | Static values                          |
+| `tw/`         | NativeWind wrappers                    |
+| `locales/`    | i18n translations                      |
 
 ---
 
@@ -116,7 +123,7 @@ src/
 │   │   │   ├── tasks.tsx
 │   │   │   ├── profile.tsx
 │   │   │   └── settings.tsx
-│   │   └── _layout.tsx           # Auth guard
+│   │   └── _layout.tsx            # Auth guard
 │   ├── onboarding/
 │   └── _layout.tsx               # Root layout with providers
 │
@@ -131,27 +138,56 @@ src/
 │   ├── onboarding/
 │   └── settings/
 │
-├── shared/                       # Shared Code
-│   ├── ui/                       # Design System
+├── components/                   # UI Components
+│   ├── ui/
 │   │   ├── primitives/           # Button, Input, Card, etc.
-│   │   ├── layout/               # Wrappers, containers
-│   │   ├── feedback/             # Toast, Loading, Error
-│   │   └── index.ts
-│   ├── hooks/                    # Cross-feature hooks
-│   ├── stores/                   # Global stores
-│   ├── lib/                      # Core utilities
-│   ├── context/                  # Global providers
-│   └── types/                    # Shared types
+│   │   ├── layout/              # LayoutWrapper, containers
+│   │   ├── forms/              # FormInput
+│   │   ├── feedback/            # Toast, Loading, Error
+│   │   └── optimized/           # OptimizedImage
+│   ├── navigation/               # (optional)
+│   └── providers/                # (optional)
 │
-├── config/                       # Configuration
-├── constants/                    # Static constants
-├── assets/                       # Images, fonts
-├── locales/                      # i18n translations
-├── tw/                           # NativeWind wrappers
-└── supabase/                     # Backend
-    ├── functions/                # Edge Functions
-    ├── migrations/               # Database migrations
-    └── templates/                # Email templates
+├── hooks/                        # Shared Hooks
+│
+├── lib/                         # Utilities
+│   ├── storage/                 # MMKV storage
+│   ├── utils.ts
+│   ├── query-client.ts
+│   ├── auth-helpers.ts
+│   └── validation/
+│
+├── store/                       # Global Stores
+│   ├── profile-store.ts
+│   └── offline-store.ts
+│
+├── context/                     # Context Providers
+│   ├── auth-context.tsx
+│   ├── theme-context.tsx
+│   ├── revenue-cat-context.tsx
+│   ├── stripe-context.tsx
+│   └── sidebar-context.tsx
+│
+├── types/                       # Shared Types
+│
+├── constants/                   # Constants
+│
+├── tw/                         # NativeWind Wrappers
+│
+└── locales/                    # i18n Translations
+```
+
+│
+├── config/ # Configuration
+├── constants/ # Static constants
+├── assets/ # Images, fonts
+├── locales/ # i18n translations
+├── tw/ # NativeWind wrappers
+└── supabase/ # Backend
+├── functions/ # Edge Functions
+├── migrations/ # Database migrations
+└── templates/ # Email templates
+
 ```
 
 ---
@@ -161,59 +197,63 @@ src/
 ### Standard Feature Layout
 
 ```
+
 features/{feature-name}/
 ├── components/
-│   ├── {component-name}.tsx
-│   └── index.ts                  # Barrel export
+│ ├── {component-name}.tsx
+│ └── index.ts # Barrel export
 │
 ├── hooks/
-│   ├── use-{feature}.ts          # Main hook
-│   ├── use-{feature}-{action}.ts # Action-specific hooks
-│   └── index.ts
+│ ├── use-{feature}.ts # Main hook
+│ ├── use-{feature}-{action}.ts # Action-specific hooks
+│ └── index.ts
 │
 ├── api/
-│   ├── {feature}-api.ts          # Supabase calls
-│   └── index.ts
+│ ├── {feature}-api.ts # Supabase calls
+│ └── index.ts
 │
-├── stores/                       # Optional
-│   ├── {feature}-store.ts
-│   └── index.ts
+├── stores/ # Optional
+│ ├── {feature}-store.ts
+│ └── index.ts
 │
-├── utils/                        # Optional
-│   └── {feature}-helpers.ts
+├── utils/ # Optional
+│ └── {feature}-helpers.ts
 │
-├── types.ts                      # Feature types
+├── types.ts # Feature types
 │
-└── index.ts                      # PUBLIC API ONLY
+└── index.ts # PUBLIC API ONLY
+
 ```
 
 ### Example: Tasks Feature
 
 ```
+
 features/tasks/
 ├── components/
-│   ├── task-card.tsx
-│   ├── task-list.tsx
-│   ├── create-task-form.tsx
-│   ├── edit-task-modal.tsx
-│   ├── status-badges.tsx
-│   └── index.ts
+│ ├── task-card.tsx
+│ ├── task-list.tsx
+│ ├── create-task-form.tsx
+│ ├── edit-task-modal.tsx
+│ ├── status-badges.tsx
+│ └── index.ts
 │
 ├── hooks/
-│   ├── use-tasks.ts              # CRUD operations
-│   ├── use-task-filters.ts       # Filter state
-│   └── index.ts
+│ ├── use-tasks.ts # CRUD operations
+│ ├── use-task-filters.ts # Filter state
+│ └── index.ts
 │
 ├── api/
-│   ├── tasks-api.ts
-│   └── index.ts
+│ ├── tasks-api.ts
+│ └── index.ts
 │
 ├── stores/
-│   ├── tasks-filter-store.ts
-│   └── index.ts
+│ ├── tasks-filter-store.ts
+│ └── index.ts
 │
 ├── types.ts
 └── index.ts
+
 ```
 
 ---
@@ -223,29 +263,31 @@ features/tasks/
 ### Three-Tier State Strategy
 
 ```
+
 ┌─────────────────────────────────────────────────────────────┐
-│                        Components                            │
+│ Components │
 └─────────────────────────────────────────────────────────────┘
-                              │
-        ┌─────────────────────┼─────────────────────┐
-        ▼                     ▼                     ▼
-┌───────────────┐   ┌───────────────┐   ┌───────────────┐
-│  React Query  │   │    Zustand    │   │    Context    │
-│ (Server Data) │   │ (Client Data) │   │ (Global UI)   │
-└───────────────┘   └───────────────┘   └───────────────┘
-        │                     │                     │
-        ▼                     ▼                     │
-┌───────────────┐   ┌───────────────┐               │
-│   Supabase    │   │     MMKV      │               │
-│   (Remote)    │   │  (Persisted)  │               │
-└───────────────┘   └───────────────┘               │
-                                                    │
-                              ┌──────────────────────┘
-                              ▼
-                    ┌───────────────┐
-                    │    Memory     │
-                    │  (Runtime)    │
-                    └───────────────┘
+│
+┌─────────────────────┼─────────────────────┐
+▼ ▼ ▼
+┌───────────────┐ ┌───────────────┐ ┌───────────────┐
+│ React Query │ │ Zustand │ │ Context │
+│ (Server Data) │ │ (Client Data) │ │ (Global UI) │
+└───────────────┘ └───────────────┘ └───────────────┘
+│ │ │
+▼ ▼ │
+┌───────────────┐ ┌───────────────┐ │
+│ Supabase │ │ MMKV │ │
+│ (Remote) │ │ (Persisted) │ │
+└───────────────┘ └───────────────┘ │
+│
+┌──────────────────────┘
+▼
+┌───────────────┐
+│ Memory │
+│ (Runtime) │
+└───────────────┘
+
 ```
 
 ### Data Flow by Type
@@ -263,38 +305,42 @@ features/tasks/
 ### Server Data Flow (React Query)
 
 ```
+
 Component
-    │
-    ▼ calls
+│
+▼ calls
 useQuery/useMutation (hooks/{feature})
-    │
-    ▼ fetches via
+│
+▼ fetches via
 api/{feature}-api.ts
-    │
-    ▼ calls
+│
+▼ calls
 Supabase Client
-    │
-    ▼ returns
+│
+▼ returns
 Data → Cache → Component re-renders
+
 ```
 
 ### Client State Flow (Zustand)
 
 ```
+
 Component
-    │
-    ▼ calls
+│
+▼ calls
 useStore (hooks/{feature} or stores/)
-    │
-    ▼ updates
+│
+▼ updates
 Zustand Store
-    │
-    ▼ persists to
+│
+▼ persists to
 MMKV Storage
-    │
-    ▼ triggers
+│
+▼ triggers
 Component re-render via selectors
-```
+
+````
 
 ---
 
@@ -318,7 +364,7 @@ Component re-render via selectors
 // stores/{feature}-store.ts
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { zustandStorage } from '@/shared/lib/storage'
+import { zustandStorage } from '@/lib/storage'
 
 interface TasksFilterState {
   status: TaskStatus | null
@@ -347,7 +393,7 @@ export const useTasksFilterStore = create<TasksFilterState>()(
 // Selectors for performance
 export const selectStatus = (state: TasksFilterState) => state.status
 export const selectSortBy = (state: TasksFilterState) => state.sortBy
-```
+````
 
 ### React Query Pattern
 
@@ -453,9 +499,9 @@ router.push({
 ```
 Level 0: External packages (react, expo, etc.)
     ↑
-Level 1: config/, constants/, tw/
+Level 1: config/, constants/, tw/, locales/
     ↑
-Level 2: shared/
+Level 2: components/, hooks/, lib/, store/, context/, types/
     ↑
 Level 3: features/
     ↑
@@ -464,13 +510,17 @@ Level 4: app/
 
 ### Allowed Imports
 
-| From         | Can Import                                                                |
-| ------------ | ------------------------------------------------------------------------- |
-| `app/`       | `features/`, `shared/`, `config/`, `constants/`                           |
-| `features/`  | Other `features/` (via index.ts only), `shared/`, `config/`, `constants/` |
-| `shared/`    | `config/`, `constants/`, other `shared/` modules                          |
-| `config/`    | `constants/`, external packages                                           |
-| `constants/` | External packages only                                                    |
+| From          | Can Import                                                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `app/`        | `features/`, `components/`, `hooks/`, `lib/`, `store/`, `context/`, `config/`, `constants/`                                     |
+| `features/`   | Other `features/` (via index.ts only), `components/`, `hooks/`, `lib/`, `store/`, `context/`, `types/`, `config/`, `constants/` |
+| `components/` | `lib/`, `types/`, `constants/`                                                                                                  |
+| `hooks/`      | `lib/`, `types/`, `constants/`                                                                                                  |
+| `lib/`        | `types/`, `constants/`, external packages                                                                                       |
+| `store/`      | `lib/`, `types/`                                                                                                                |
+| `context/`    | `lib/`, `types/`, `store/`                                                                                                      |
+| `config/`     | `constants/`, external packages                                                                                                 |
+| `constants/`  | External packages only                                                                                                          |
 
 ### Cross-Feature Dependencies
 
@@ -492,7 +542,7 @@ import { authApi } from '@/features/auth/api/auth-api'
 
 - Each feature should work in isolation
 - Minimize cross-feature dependencies
-- Use shared/ for truly common code
+- Use components/, hooks/, lib/ for truly common code
 
 ### 2. Prefer Composition
 
@@ -620,7 +670,7 @@ export interface CreateTaskDTO {
 │         │        └────────────┘                            │
 │         │                                                   │
 │         └────────────────────────────────────────────────► │
-│                    Uses shared/ui                           │
+│                    Uses components/ui                          │
 │                                                             │
 └────────────────────────────────────────────────────────────┘
 ```

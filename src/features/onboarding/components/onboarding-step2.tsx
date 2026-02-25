@@ -1,5 +1,5 @@
 import { ONBOARDING_STEPS } from '@/constants/onboarding'
-import { Button } from '@/shared/ui/primitives'
+import { Button } from '@/components/ui/primitives'
 import { Text, View } from '@/tw'
 import React from 'react'
 

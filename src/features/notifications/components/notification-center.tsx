@@ -1,4 +1,4 @@
-import { ListSeparator } from '@/shared/ui/primitives'
+import { ListSeparator } from '@/components/ui/primitives'
 import { FlashList, RefreshControl, Text, View } from '@/tw'
 import React, { useCallback, useMemo } from 'react'
 import { NotificationItem } from './notification-item'

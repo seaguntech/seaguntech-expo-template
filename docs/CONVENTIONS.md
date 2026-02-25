@@ -30,8 +30,8 @@ import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 // 2. Shared modules
-import { Button, Card } from '@/shared/ui'
-import { useCache } from '@/shared/hooks'
+import { Button, Card } from '@/ui'
+import { useCache } from '@/hooks'
 
 // 3. Feature modules (via public API only)
 import { useAuth } from '@/features/auth'
@@ -97,10 +97,10 @@ export function useUserContext() {
 }
 
 // features/tasks/hooks/use-tasks.ts
-import { useUserContext } from '@/shared/hooks'
+import { useUserContext } from '@/hooks'
 
 // features/profile/hooks/use-profile.ts
-import { useUserContext } from '@/shared/hooks'
+import { useUserContext } from '@/hooks'
 ```
 
 ---
@@ -381,7 +381,7 @@ const canEdit = true
 
 // 1. Imports (following import hierarchy)
 import { View, Text, Pressable } from '@/tw'
-import { Badge } from '@/shared/ui'
+import { Badge } from '@/ui'
 import type { Task } from '../types'
 
 // 2. Types (if not in separate file)

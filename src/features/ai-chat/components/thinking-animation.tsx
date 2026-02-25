@@ -1,4 +1,4 @@
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/lib/utils'
 import { View } from '@/tw'
 import React, { useEffect } from 'react'
 import Animated, {

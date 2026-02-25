@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/primitives'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/primitives'
 import { Text, View } from '@/tw'
 import * as Device from 'expo-device'
 import React from 'react'

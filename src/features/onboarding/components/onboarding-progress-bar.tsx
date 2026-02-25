@@ -1,5 +1,5 @@
-import { cn } from '@/shared/lib/utils'
-import { ProgressBar } from '@/shared/ui/primitives'
+import { cn } from '@/lib/utils'
+import { ProgressBar } from '@/components/ui/primitives'
 import { View } from '@/tw'
 import React from 'react'
 

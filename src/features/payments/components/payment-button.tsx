@@ -1,5 +1,5 @@
-import { useStripe } from '@/shared/context/stripe-context'
-import { Button } from '@/shared/ui/primitives'
+import { useStripe } from '@/context/stripe-context'
+import { Button } from '@/components/ui/primitives'
 import { View } from '@/tw'
 import type { PaymentProduct } from '@/types'
 import React, { useState } from 'react'

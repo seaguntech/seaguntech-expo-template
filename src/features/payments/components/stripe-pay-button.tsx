@@ -1,5 +1,5 @@
-import { useStripe } from '@/shared/context/stripe-context'
-import { cn } from '@/shared/lib/utils'
+import { useStripe } from '@/context/stripe-context'
+import { cn } from '@/lib/utils'
 import { ActivityIndicator, Pressable, Text, View } from '@/tw'
 import React, { useState } from 'react'
 

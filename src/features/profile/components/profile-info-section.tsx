@@ -1,5 +1,5 @@
-import { cn, formatDate } from '@/shared/lib/utils'
-import { Card, CardContent } from '@/shared/ui/primitives'
+import { cn, formatDate } from '@/lib/utils'
+import { Card, CardContent } from '@/components/ui/primitives'
 import { Text, View } from '@/tw'
 import type { Profile } from '@/types'
 

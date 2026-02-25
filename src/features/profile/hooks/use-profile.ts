@@ -1,9 +1,9 @@
-import { useAuth } from '@/shared/context/auth-context'
-import { queryKeys } from '@/shared/lib/query-client'
-import { useProfileStore } from '@/shared/stores/profile-store'
+import { useAuth } from '@/context/auth-context'
+import { queryKeys } from '@/lib/query-client'
+import { useProfileStore } from '@/store/profile-store'
 import type { Profile, ProfileUpdatePayload } from '@/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { deleteAvatar, fetchProfile, updateProfile, uploadAvatar } from '../api/profile-api'
+import { deleteAvatar, fetchProfile, updateProfile, uploadAvatar } from '../lib/profile-api'
 
 export function useProfile() {
   const { user, isAuthenticated } = useAuth()

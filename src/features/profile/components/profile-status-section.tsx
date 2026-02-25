@@ -1,5 +1,5 @@
-import { formatDate } from '@/shared/lib/utils'
-import { Badge, Card, CardContent } from '@/shared/ui/primitives'
+import { formatDate } from '@/lib/utils'
+import { Badge, Card, CardContent } from '@/components/ui/primitives'
 import { Pressable, Text, View } from '@/tw'
 import { useTranslation } from 'react-i18next'
 

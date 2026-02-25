@@ -1,4 +1,4 @@
-import { Toggle } from '@/shared/ui/primitives'
+import { Toggle } from '@/components/ui/primitives'
 import { View } from '@/tw'
 import React from 'react'
 import { useTranslation } from 'react-i18next'

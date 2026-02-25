@@ -1,4 +1,4 @@
-import { useStripe } from '@/shared/context/stripe-context'
+import { useStripe } from '@/context/stripe-context'
 import {
   Button,
   Card,
@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/shared/ui/primitives'
+} from '@/components/ui/primitives'
 import { Text, View } from '@/tw'
 import type { PaymentProduct } from '@/types'
 import React, { useEffect, useState } from 'react'

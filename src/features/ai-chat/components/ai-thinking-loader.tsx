@@ -1,4 +1,4 @@
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/lib/utils'
 import { Text, View } from '@/tw'
 import React from 'react'
 import { ThinkingAnimation } from './thinking-animation'

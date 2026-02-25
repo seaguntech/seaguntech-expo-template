@@ -1,5 +1,5 @@
-import { FormInput } from '@/shared/ui/forms'
-import { Button, Dialog, DialogActions } from '@/shared/ui/primitives'
+import { FormInput } from '@/components/ui/forms'
+import { Button, Dialog, DialogActions } from '@/components/ui/primitives'
 import { Text, View } from '@/tw'
 import type { ProfileField } from '@/types'
 import React, { useEffect } from 'react'

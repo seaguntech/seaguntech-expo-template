@@ -1,5 +1,5 @@
-import { cn } from '@/shared/lib/utils'
-import { Button, Card, CardContent, Toggle } from '@/shared/ui/primitives'
+import { cn } from '@/lib/utils'
+import { Button, Card, CardContent, Toggle } from '@/components/ui/primitives'
 import { Text, View } from '@/tw'
 import React from 'react'
 import { Platform } from 'react-native'

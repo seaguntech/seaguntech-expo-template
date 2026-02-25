@@ -65,9 +65,16 @@ Dependency checks:
 ## Project Structure
 
 - `app/` - Expo Router screens and layouts
-- `src/features/` - feature modules (components, hooks, api, stores, types)
-- `src/shared/` - shared UI, hooks, context, stores, libs
-- `tw/` - NativeWind v5 CSS-wrapped components
+- `src/features/` - feature modules (components, hooks, lib, store, constants, types)
+- `src/components/` - UI components (primitives, layout, forms, feedback, optimized)
+- `src/hooks/` - shared hooks
+- `src/lib/` - shared libraries (utils, storage, query-client, etc.)
+- `src/store/` - shared stores (zustand)
+- `src/context/` - context providers
+- `src/types/` - shared types
+- `src/constants/` - constants
+- `src/tw/` - NativeWind v5 CSS-wrapped components
+- `src/locales/` - i18n translations
 - `supabase/` - Edge Functions, migrations
 - `docs/` - architecture, API, conventions
 
@@ -76,13 +83,13 @@ Dependency checks:
 Import order (CRITICAL):
 
 1. external packages
-2. shared modules (`@/shared/...`)
+2. shared modules (`@/components/...`, `@/hooks/...`, `@/lib/...`, `@/store/...`, `@/context/...`, `@/types/...`)
 3. features (public API only, `@/features/...`)
 4. local relative imports
 
 Dependency direction:
 
-- `app/` -> `features/` -> `shared/` -> `config/`, `constants/`, `tw/`
+- `app/` -> `features/` -> `components/`, `hooks/`, `lib/`, `store/`, `context/`, `types/` -> `constants/`, `tw/`, `locales/`
 - never import `app/` from feature/shared
 
 Feature-first API usage:
@@ -131,7 +138,7 @@ Examples:
 - Strict TypeScript.
 - Components: `PascalCase`, hooks: `useX`, stores: `{feature}-store`.
 - Props interfaces: `{Component}Props`.
-- Types: `types.ts` per feature and `src/shared/types` for common types.
+- Types: `types.ts` per feature and `src/types` for common types.
 
 ## Error Handling
 
@@ -141,13 +148,13 @@ Examples:
 
 ## State and Data
 
-- Server data: React Query in `features/*/api`.
-- Client state: Zustand + MMKV in `features/*/stores`.
-- Auth state: `@/shared/context` and Supabase Auth.
+- Server data: React Query in `features/*/lib`.
+- Client state: Zustand + MMKV in `features/*/store` or `src/store`.
+- Auth state: `@/context` and Supabase Auth.
 
 ## Testing Guidelines
 
-- Jest + `jest-expo` + `@testing-library/react-native`.
+- Vitest + `@testing-library/react-native`.
 - Tests in `__tests__/` or colocated `*.test.tsx`.
 - Use `pnpm test -- path/to/file.test.tsx` for a single test.
 

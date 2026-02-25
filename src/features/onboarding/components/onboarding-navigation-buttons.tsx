@@ -1,5 +1,5 @@
-import { cn } from '@/shared/lib/utils'
-import { Button } from '@/shared/ui/primitives'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/primitives'
 import { Pressable, Text, View } from '@/tw'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
