@@ -1,5 +1,5 @@
 import { supabase } from '@/config/supabase'
-import { Button } from '@/shared/ui/primitives'
+import { Button } from '@/components/ui/primitives'
 import React, { useState } from 'react'
 import { Linking } from 'react-native'
 

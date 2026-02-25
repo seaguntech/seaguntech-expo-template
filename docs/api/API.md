@@ -48,7 +48,7 @@
 ```typescript
 // config/supabase.ts
 import { createClient } from '@supabase/supabase-js'
-import { storage } from '@/shared/lib/storage'
+import { storage } from '@/lib/storage'
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!

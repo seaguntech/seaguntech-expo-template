@@ -1,32 +1,32 @@
 // @ts-nocheck
-import { AuthProvider, useAuth } from '@/shared/context/auth-context'
-import { act, renderHook, waitFor } from '@testing-library/react-native'
+import { AuthProvider, useAuth } from '@/context/auth-context'
 import type { ReactNode } from 'react'
+import { act, renderHook, waitFor } from '../react-native-testing'
 
 // Mock Supabase
-const mockSignInWithPassword = jest.fn()
-const mockSignUp = jest.fn()
-const mockSignOut = jest.fn()
-const mockResetPasswordForEmail = jest.fn()
-const mockUpdateUser = jest.fn()
-const mockGetSession = jest.fn()
-const mockRefreshSession = jest.fn()
-const mockOnAuthStateChange = jest.fn()
-const mockQueryClientCancelQueries = jest.fn()
-const mockQueryClientClear = jest.fn()
-const mockHydrate = jest.fn()
-const mockClearProfile = jest.fn()
+const mockSignInWithPassword = vi.fn()
+const mockSignUp = vi.fn()
+const mockSignOut = vi.fn()
+const mockResetPasswordForEmail = vi.fn()
+const mockUpdateUser = vi.fn()
+const mockGetSession = vi.fn()
+const mockRefreshSession = vi.fn()
+const mockOnAuthStateChange = vi.fn()
+const mockQueryClientCancelQueries = vi.fn()
+const mockQueryClientClear = vi.fn()
+const mockHydrate = vi.fn()
+const mockClearProfile = vi.fn()
 let authStateChangeHandler: ((event: string, session: unknown) => Promise<void> | void) | null =
   null
 
-jest.mock('@/config/supabase', () => ({
+vi.mock('@/config/supabase', () => ({
   supabase: {
     auth: {
       getSession: () => mockGetSession(),
       signInWithPassword: (credentials: unknown) => mockSignInWithPassword(credentials),
       signUp: (data: unknown) => mockSignUp(data),
       signOut: () => mockSignOut(),
-      signInWithOAuth: jest.fn(),
+      signInWithOAuth: vi.fn(),
       resetPasswordForEmail: (email: string, options: unknown) =>
         mockResetPasswordForEmail(email, options),
       updateUser: (data: unknown) => mockUpdateUser(data),
@@ -37,19 +37,19 @@ jest.mock('@/config/supabase', () => ({
   },
 }))
 
-jest.mock('@/shared/lib/query-client', () => ({
+vi.mock('@/lib/query-client', () => ({
   queryClient: {
     cancelQueries: () => mockQueryClientCancelQueries(),
     clear: () => mockQueryClientClear(),
   },
 }))
 
-jest.mock('@/shared/lib/storage/supabase', () => ({
-  clearAuthStorage: jest.fn(),
+vi.mock('@/lib/storage/supabase', () => ({
+  clearAuthStorage: vi.fn(),
 }))
 
-jest.mock('@/shared/stores/profile-store', () => ({
-  useProfileStore: jest.fn((selector) =>
+vi.mock('@/store/profile-store', () => ({
+  useProfileStore: vi.fn((selector) =>
     selector({
       hydrate: mockHydrate,
       clearProfile: mockClearProfile,
@@ -61,14 +61,14 @@ const wrapper = ({ children }: { children: ReactNode }) => <AuthProvider>{childr
 
 describe('AuthContext', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     authStateChangeHandler = null
     mockGetSession.mockResolvedValue({ data: { session: null } })
     mockQueryClientCancelQueries.mockResolvedValue(undefined)
     mockOnAuthStateChange.mockImplementation((callback) => {
       authStateChangeHandler = callback
       return {
-        data: { subscription: { unsubscribe: jest.fn() } },
+        data: { subscription: { unsubscribe: vi.fn() } },
       }
     })
   })
@@ -423,7 +423,7 @@ describe('AuthContext', () => {
 
 describe('useAuth hook', () => {
   it('throws error when used outside AuthProvider', () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
     expect(() => {
       renderHook(() => useAuth())

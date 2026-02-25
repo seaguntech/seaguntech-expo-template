@@ -1,5 +1,5 @@
-import { cn } from '@/shared/lib/utils'
-import { Card, CardContent } from '@/shared/ui/primitives'
+import { cn } from '@/lib/utils'
+import { Card, CardContent } from '@/components/ui/primitives'
 import { Pressable, Text, View } from '@/tw'
 import React, { memo } from 'react'
 

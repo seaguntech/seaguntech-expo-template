@@ -1,4 +1,4 @@
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/lib/utils'
 import { Pressable, Text, View } from '@/tw'
 import AntDesign from '@expo/vector-icons/AntDesign'
 import * as AppleAuthentication from 'expo-apple-authentication'

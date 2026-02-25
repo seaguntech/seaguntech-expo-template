@@ -1,4 +1,4 @@
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/lib/utils'
 import { Pressable, ScrollView, Text } from '@/tw'
 import type { PromptPreset } from '@/types'
 import React, { memo, useCallback } from 'react'

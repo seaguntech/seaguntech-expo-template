@@ -1,4 +1,4 @@
-import { cn, debounce, formatDate, isValidEmail } from '../../src/shared/lib/utils'
+import { cn, debounce, formatDate, isValidEmail } from '../../src/lib/utils'
 
 describe('utils', () => {
   describe('cn', () => {
@@ -39,15 +39,15 @@ describe('utils', () => {
 
   describe('debounce', () => {
     beforeEach(() => {
-      jest.useFakeTimers()
+      vi.useFakeTimers()
     })
 
     afterEach(() => {
-      jest.useRealTimers()
+      vi.useRealTimers()
     })
 
     it('should debounce function calls', () => {
-      const fn = jest.fn()
+      const fn = vi.fn()
       const debouncedFn = debounce(fn, 300)
 
       debouncedFn()
@@ -56,20 +56,20 @@ describe('utils', () => {
 
       expect(fn).not.toHaveBeenCalled()
 
-      jest.advanceTimersByTime(300)
+      vi.advanceTimersByTime(300)
 
       expect(fn).toHaveBeenCalledTimes(1)
     })
 
     it('should call function with latest arguments', () => {
-      const fn = jest.fn()
+      const fn = vi.fn()
       const debouncedFn = debounce(fn, 300)
 
       debouncedFn('first')
       debouncedFn('second')
       debouncedFn('third')
 
-      jest.advanceTimersByTime(300)
+      vi.advanceTimersByTime(300)
 
       expect(fn).toHaveBeenCalledWith('third')
     })

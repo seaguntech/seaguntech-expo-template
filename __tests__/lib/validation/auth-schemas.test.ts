@@ -6,7 +6,7 @@ import {
   signUpSchema,
   updatePasswordSchema,
   validateRedirectUrl,
-} from '@/shared/lib/validation'
+} from '@/lib/validation'
 
 describe('Auth Validation Schemas', () => {
   describe('signInSchema', () => {

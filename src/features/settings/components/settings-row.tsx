@@ -1,4 +1,4 @@
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/lib/utils'
 import { Pressable, Text, useCSSVariable, View } from '@/tw'
 import type { SettingRow as SettingRowType } from '@/types'
 import React from 'react'

@@ -19,4 +19,4 @@ export { useOnboarding } from './hooks'
 export type { OnboardingStep, OnboardingState, PermissionsGranted } from './types'
 
 // Store - for direct state access in route screens
-export { useOnboardingStore } from './stores'
+export { useOnboardingStore } from './store'

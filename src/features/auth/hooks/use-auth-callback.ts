@@ -7,7 +7,7 @@ import {
   extractVerificationType,
   extractSessionTokens,
   isVerificationType,
-} from '@/shared/lib/auth-helpers'
+} from '@/lib/auth-helpers'
 
 type VerificationStatus = 'loading' | 'success' | 'error'
 type RouterReplaceHref = Parameters<ReturnType<typeof useRouter>['replace']>[0]

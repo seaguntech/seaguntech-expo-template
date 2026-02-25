@@ -3,18 +3,18 @@ import { useTasks } from '@/features/tasks/hooks/use-tasks'
 import type { Task, TaskPriority, TaskStatus } from '@/types'
 import { notifyManager } from '@tanstack/query-core'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { act, renderHook, waitFor } from '@testing-library/react-native'
 import type { ReactNode } from 'react'
+import { act, renderHook, waitFor } from '../../react-native-testing'
 
 // Mock tasks API
-const mockGetTasks = jest.fn()
-const mockCreateTask = jest.fn()
-const mockUpdateTask = jest.fn()
-const mockDeleteTask = jest.fn()
-const mockReorderTasks = jest.fn()
-const mockUseAuth = jest.fn()
+const mockGetTasks = vi.fn()
+const mockCreateTask = vi.fn()
+const mockUpdateTask = vi.fn()
+const mockDeleteTask = vi.fn()
+const mockReorderTasks = vi.fn()
+const mockUseAuth = vi.fn()
 
-jest.mock('@/features/tasks/api/tasks-api', () => ({
+vi.mock('@/features/tasks/lib/tasks-api', () => ({
   tasksApi: {
     getTasks: (filter: unknown) => mockGetTasks(filter),
     createTask: (dto: unknown) => mockCreateTask(dto),
@@ -24,7 +24,7 @@ jest.mock('@/features/tasks/api/tasks-api', () => ({
   },
 }))
 
-jest.mock('@/shared/context', () => ({
+vi.mock('@/context', () => ({
   useAuth: () => mockUseAuth(),
 }))
 
@@ -84,7 +84,7 @@ describe('useTasks', () => {
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockUseAuth.mockReturnValue({
       isAuthenticated: true,
       user: { id: 'user-1' },

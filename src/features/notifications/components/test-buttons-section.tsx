@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/primitives'
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/primitives'
 import React from 'react'
 
 interface TestButtonsSectionProps {

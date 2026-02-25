@@ -1,6 +1,6 @@
-import { useRevenueCat } from '@/shared/context/revenue-cat-context'
-import { Button } from '@/shared/ui/primitives/button'
-import { Card, CardContent, CardFooter, CardHeader } from '@/shared/ui/primitives/card'
+import { useRevenueCat } from '@/context/revenue-cat-context'
+import { Button } from '@/components/ui/primitives/button'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/primitives/card'
 import { Text, View } from '@/tw'
 
 export function SubscriptionManagement() {

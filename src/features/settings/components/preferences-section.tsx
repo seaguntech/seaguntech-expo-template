@@ -1,5 +1,5 @@
 import { changeLanguage, SUPPORTED_LANGUAGES, type SupportedLanguage } from '@/config/i18n'
-import { useThemeContext } from '@/shared/context/theme-context'
+import { useThemeContext } from '@/context/theme-context'
 import { Pressable, Text, View } from '@/tw'
 import type { ThemeMode } from '@/types'
 import React from 'react'

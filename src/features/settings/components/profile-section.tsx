@@ -1,5 +1,5 @@
-import { useProfileStore } from '@/shared/stores/profile-store'
-import { Avatar, Card, CardContent } from '@/shared/ui/primitives'
+import { useProfileStore } from '@/store/profile-store'
+import { Avatar, Card, CardContent } from '@/components/ui/primitives'
 import { Pressable, Text, View } from '@/tw'
 import { useRouter } from 'expo-router'
 

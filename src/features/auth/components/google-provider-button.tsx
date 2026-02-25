@@ -1,4 +1,4 @@
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/lib/utils'
 import { Pressable, Text } from '@/tw'
 import AntDesign from '@expo/vector-icons/AntDesign'
 import React from 'react'

@@ -1,4 +1,4 @@
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/lib/utils'
 import { Text } from '@/tw'
 import React, { useEffect, useRef, useState } from 'react'
 

@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useState } from 'react'
-import { useAuth } from '@/shared/context'
-import { queryKeys } from '@/shared/lib/query-client'
+import { useAuth } from '@/context'
+import { queryKeys } from '@/lib/query-client'
 import type { CreateTaskDto, Task, TaskFilter, UpdateTaskDto } from '@/types'
-import { tasksApi } from '../api/tasks-api'
+import { tasksApi } from '../lib/tasks-api'
 
 export function useTasks(initialFilter: TaskFilter = {}) {
   const { user, isAuthenticated } = useAuth()

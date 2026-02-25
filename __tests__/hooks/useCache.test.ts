@@ -1,34 +1,34 @@
-import { act, renderHook } from '@testing-library/react-native'
+import { useCache } from '@/hooks/use-cache'
+import { act, renderHook } from '../react-native-testing'
 
 // Mock MMKV
-jest.mock('react-native-mmkv', () => {
+vi.mock('react-native-mmkv', () => {
   const storage = {
-    getString: jest.fn(),
-    setString: jest.fn(),
-    getBoolean: jest.fn(),
-    setBoolean: jest.fn(),
-    getNumber: jest.fn(),
-    setNumber: jest.fn(),
-    delete: jest.fn(),
-    remove: jest.fn(),
-    contains: jest.fn(),
-    clearAll: jest.fn(),
-    getAllKeys: jest.fn(() => []),
+    getString: vi.fn(),
+    setString: vi.fn(),
+    getBoolean: vi.fn(),
+    setBoolean: vi.fn(),
+    getNumber: vi.fn(),
+    setNumber: vi.fn(),
+    delete: vi.fn(),
+    remove: vi.fn(),
+    contains: vi.fn(),
+    clearAll: vi.fn(),
+    getAllKeys: vi.fn(() => []),
   }
 
   return {
-    MMKV: jest.fn().mockImplementation(() => storage),
-    createMMKV: jest.fn().mockImplementation(() => storage),
+    MMKV: vi.fn().mockImplementation(() => storage),
+    createMMKV: vi.fn().mockImplementation(() => storage),
   }
 })
 
 describe('useCache', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should return null for non-existent cache key', () => {
-    const { useCache } = require('@/shared/hooks/use-cache')
     const { result } = renderHook(() => useCache())
 
     const value = result.current.get('non-existent-key')
@@ -36,7 +36,6 @@ describe('useCache', () => {
   })
 
   it('should set and get cached values', () => {
-    const { useCache } = require('@/shared/hooks/use-cache')
     const { result } = renderHook(() => useCache())
 
     act(() => {
@@ -49,7 +48,6 @@ describe('useCache', () => {
   })
 
   it('should remove cached values', () => {
-    const { useCache } = require('@/shared/hooks/use-cache')
     const { result } = renderHook(() => useCache())
 
     act(() => {

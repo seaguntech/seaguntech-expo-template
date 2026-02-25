@@ -1,4 +1,4 @@
-import { useRevenueCat } from '@/shared/context/revenue-cat-context'
+import { useRevenueCat } from '@/context/revenue-cat-context'
 import { useMemo } from 'react'
 
 export interface UsePremiumStatusResult {

@@ -1,5 +1,5 @@
-import { useRevenueCat } from '@/shared/context'
-import { Button } from '@/shared/ui/primitives'
+import { useRevenueCat } from '@/context'
+import { Button } from '@/components/ui/primitives'
 import { Text, View } from '@/tw'
 import React, { useState } from 'react'
 

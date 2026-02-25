@@ -1,5 +1,5 @@
-import { cn } from '@/shared/lib/utils'
-import { Avatar, Badge } from '@/shared/ui'
+import { cn } from '@/lib/utils'
+import { Avatar, Badge } from '@/components/ui'
 import { Pressable, Text, View } from '@/tw'
 import React from 'react'
 

@@ -1,6 +1,6 @@
 import { usePremiumStatus } from '@/features/premium/hooks/use-premium-status'
-import { cn } from '@/shared/lib/utils'
-import { Button } from '@/shared/ui/primitives'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/primitives'
 import { Pressable, Text, View } from '@/tw'
 import { useRouter } from 'expo-router'
 import React from 'react'

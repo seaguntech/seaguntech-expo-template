@@ -1,6 +1,6 @@
 import { usePremiumStatus } from '@/features/premium/hooks/use-premium-status'
-import { cn } from '@/shared/lib/utils'
-import { Badge, Button, Card, CardContent } from '@/shared/ui/primitives'
+import { cn } from '@/lib/utils'
+import { Badge, Button, Card, CardContent } from '@/components/ui/primitives'
 import { Text, View } from '@/tw'
 import { useRouter } from 'expo-router'
 

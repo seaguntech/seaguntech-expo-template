@@ -6,7 +6,7 @@ import {
   selectIsLastStep,
   selectProgress,
   useOnboardingStore,
-} from '@/features/onboarding/stores'
+} from '@/features/onboarding/store'
 import { useRouter } from 'expo-router'
 import { useCallback } from 'react'
 
